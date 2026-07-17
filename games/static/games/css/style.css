@@ -206,9 +206,24 @@ p {
     border-radius: 10px;
 }
 
+.form-control:hover {
+    border-color: #777A9E;
+}
+
+.form-control:focus {
+    border-color: #8B5CF6;
+    background-color: #15162B;
+    outline: 2px solid #6D28D9;
+    outline-offset: 2px;
+}
+
+.form-control::placeholder {
+    color: #777A9E;
+}
+
 .form-actions {
     display: flex;
-    align-items: flex-start;
+    justify-content: flex-start;
     margin-top: 4px;
 }
 
@@ -290,6 +305,11 @@ p {
     background-color: #A855F7;
     text-decoration: none;
     border: 1px solid #A855F7;
+}
+
+.button:focus {
+    outline: 2px solid #C084FC;
+    outline-offset: 3px;
 }
 
 /* Карточки игр */
@@ -499,7 +519,7 @@ p {
         display: block;
     }
 
-    .button .form-actions {
+    .form-actions .button {
         display: block;
         width: 100%;
         box-sizing: border-box;
