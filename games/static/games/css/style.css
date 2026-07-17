@@ -7,6 +7,9 @@ body {
     color: #F4F4F8;
     background-color: #0F1020;
     margin: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
 /* Ссылки */
@@ -54,6 +57,7 @@ p {
     font-size: 20px;
     background-color: #0F1020;
     padding: 40px 0;
+    flex-grow: 1;
 }
 
 .site-footer {
@@ -111,6 +115,57 @@ p {
     line-height: 1.5;
     color: #A6A7C8;
     margin: 0;
+}
+
+/* Таблицы */
+
+.table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.games-table {
+    width: 100%;
+    min-width: 700px;
+    border-collapse: collapse;
+}
+
+.table-caption {
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.4;
+    color: #F4F4F8;
+    text-align: left;
+    padding-bottom: 12px;
+}
+
+.table-heading {
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.4;
+    color: #F4F4F8;
+    background-color: #1E1F3A;
+    padding: 12px 16px;
+    border-bottom: 1px solid #2F3154;
+    text-align: left;
+}
+
+.table-cell {
+    font-size: 16px;
+    line-height: 1.5;
+    color: #A6A7C8;
+    padding: 12px 16px;
+    border-bottom: 1px solid #252747;
+    text-align: left;
+}
+
+.table-empty {
+    font-size: 16px;
+    line-height: 1.5;
+    color: #777A9E;
+    padding: 24px;
+    border-bottom: 1px solid #252747;
+    text-align: center;
 }
 
 /* Секции */
