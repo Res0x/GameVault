@@ -168,6 +168,50 @@ p {
     text-align: center;
 }
 
+/* Формы */
+
+.game-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 720px;
+    margin: 24px auto 0 auto;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form-label {
+    display: block;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.4;
+    color: #F4F4F8;
+}
+
+.form-control {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    font-family: "Arial", "Helvetica", sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    color: #F4F4F8;
+    background-color: #0F1020;
+    padding: 12px 14px;
+    border: 1px solid #2F3154;
+    border-radius: 10px;
+}
+
+.form-actions {
+    display: flex;
+    align-items: flex-start;
+    margin-top: 4px;
+}
+
 /* Секции */
 .section {
     font-size: 20px;
@@ -440,6 +484,26 @@ p {
 
     .section {
         padding: 16px;
+    }
+
+    .game-form {
+        gap: 16px;
+        margin: 20px auto 0 auto;
+    }
+
+    .form-control {
+        padding: 10px 12px;
+    }
+
+    .form-actions {
+        display: block;
+    }
+
+    .button .form-actions {
+        display: block;
+        width: 100%;
+        box-sizing: border-box;
+        text-align: center;
     }
 
     .stats {
