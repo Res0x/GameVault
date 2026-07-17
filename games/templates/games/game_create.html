@@ -9,20 +9,19 @@
   <section class="section">
     <h2 class="section-title">Данные об игре</h2>
     <p class="section-text">Укажи название, жанр и свою оценку игры.</p>
-  </section>
-  <form method="post" class="game-form">
+  <form method="post" class="game-form" action="{% url 'game_create' %}">
     {% csrf_token %}
     <div class="form-group">
       <label for="game-title" class="form-label">Название игры</label>
       <input type="text" id="game-title"
-             name="title" placeholder="Название игры"
+             name="title" placeholder="Например, Baldur's Gate 3"
              class="form-control" required>
     </div>
     <div class="form-group">
-      <label for="game_genre" class="form-label">Жанр</label>
-      <input type="text" id="game_genre"
+      <label for="game-genre" class="form-label">Жанр</label>
+      <input type="text" id="game-genre"
              name="genre" class="form-control"
-             placeholder="Жанр игры" required>
+             placeholder="Например, RPG" required>
     </div>
     <div class="form-group">
       <label for="game-rating" class="form-label">Оценка</label>
@@ -34,6 +33,7 @@
       <button type="submit" class="button">Отправить данные</button>
     </div>
   </form>
+</section>
 {% if submitted_game %}
   <section class="section">
     <h2 class="section-title">Отправленные данные</h2>
