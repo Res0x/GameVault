@@ -114,11 +114,32 @@ def ratings(request):
 def game_create(request):
     submitted_game = None
 
+    platform_labels = {
+        'pc': 'PC',
+        'playstation': 'PlayStation',
+        'xbox': 'Xbox',
+        'switch': 'Nintendo Switch',
+    }
+
+    status_labels = {
+        'planned': 'Хочу пройти',
+        'playing': 'Прохожу',
+        'completed': 'Пройдено',
+    }
+
     if request.method == 'POST':
+        platform = request.POST.get('platform', '')
+        status = request.POST.get('status', '')
+
         submitted_game = {
             'title': request.POST.get('title', '').strip(),
             'genre': request.POST.get('genre', '').strip(),
+            'platform': platform,
+            'platform_display': platform_labels.get(platform, ''),
+            'status': status,
+            'status_display': status_labels.get(status, ''),
             'rating': request.POST.get('rating', ''),
+            'description': request.POST.get('description', '').strip(),
         }
 
     context = {
