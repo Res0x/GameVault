@@ -110,3 +110,20 @@ def ratings(request):
     }
 
     return render(request, 'games/ratings.html', context)
+
+def game_create(request):
+    submitted_game = None
+
+    if request.method == 'POST':
+        submitted_game = {
+            'title': request.POST.get('title', '').strip(),
+            'genre': request.POST.get('genre', '').strip(),
+            'rating': request.POST.get('rating', ''),
+        }
+
+    context = {
+        'page_title': 'Добавить игру',
+        'submitted_game': submitted_game,
+    }
+
+    return render(request, 'games/game_create.html', context)
