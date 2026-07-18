@@ -43,6 +43,24 @@
         <option value="completed">Пройдено</option>
       </select>
     </div>
+
+    <fieldset class="form-fieldset">
+      <legend class="form-legend">Режим прохождения</legend>
+        <div class="choice-list">
+        <div class="choice-item">
+          <input type="radio" id="game-mode-single" class="choice-input" name="play_mode" value="single" required>
+          <label for="game-mode-single" class="choice-label">Одиночная игра</label>
+        </div>
+        <div class="choice-item">
+          <input type="radio" id="game-mode-multiplayer" class="choice-input" name="play_mode" value="multiplayer">
+          <label for="game-mode-multiplayer" class="choice-label">Мультиплеер</label>
+        </div>
+        <div class="choice-item">
+          <input type="radio" id="game-mode-both" class="choice-input" value="both" name="play_mode">
+          <label for="game-mode-both" class="choice-label">Одиночная игра и мультиплеер</label>
+        </div>
+      </div>
+    </fieldset>
     <div class="form-group">
       <label for="game-rating" class="form-label">Оценка</label>
       <input type="number" id="game-rating"
@@ -54,6 +72,23 @@
       <textarea id="game-description" name="description"
       class="form-control" rows="5" placeholder="Кратко опиши игру"></textarea>
     </div>
+    <fieldset class="form-fieldset">
+      <legend class="form-legend">Особенности игры</legend>
+      <div class="choice-list">
+          <div class="choice-item">
+            <input type="checkbox" id="game-feature-story" name="features" value="story" class="choice-input">
+            <label for="game-feature-story" class="choice-label">Сюжетная игра</label>
+          </div>
+          <div class="choice-item">
+            <input type="checkbox" id="game-feature-open-world" name="features" value="open_world" class="choice-input">
+            <label for="game-feature-open-world" class="choice-label">Открытый мир</label>
+          </div>
+          <div class="choice-item">
+            <input type="checkbox" id="game-feature-coop" name="features" value="coop" class="choice-input">
+            <label for="game-feature-coop" class="choice-label">Кооператив</label>
+          </div>
+      </div>
+    </fieldset>
     <div class="form-actions">
       <button type="submit" class="button">Отправить данные</button>
     </div>
@@ -67,8 +102,10 @@
       <li class="game-info-item">Жанр: {{ submitted_game.genre }}</li>
       <li class="game-info-item">Платформа: {{ submitted_game.platform_display }}</li>
       <li class="game-info-item">Статус: {{ submitted_game.status_display }}</li>
-      <li class="game-info-item">Описание: {{ submitted_game.description }}</li>
       <li class="game-info-item">Оценка: {{ submitted_game.rating }}</li>
+      <li class="game-info-item">Описание: {{ submitted_game.description }}</li>
+      <li class="game-info-item">Режим прохождения: {{ submitted_game.play_mode_display }}</li>
+      <li class="game-info-item">Особенности: {{ submitted_game.features_display }}</li>
     </ul>
   </section>
 {% endif %}

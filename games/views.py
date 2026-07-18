@@ -127,17 +127,41 @@ def game_create(request):
         'completed': 'Пройдено',
     }
 
+    play_mode_labels = {
+        'single': 'Одиночная игра',
+        'multiplayer': 'Мультиплеер',
+        'both': 'Одиночная игра и мультиплеер',
+    }
+
+    feature_labels = {
+        'story': 'Сюжетная игра',
+        'open_world': 'Открытый мир',
+        'coop': 'Кооператив',
+    }
+
     if request.method == 'POST':
         platform = request.POST.get('platform', '')
         status = request.POST.get('status', '')
+        play_mode = request.POST.get('play_mode', '')
+        selected_features = request.POST.getlist('features')
+
+        feature_names = [
+            feature_labels[feature]
+            for feature in selected_features
+            if feature in feature_labels
+        ]
 
         submitted_game = {
             'title': request.POST.get('title', '').strip(),
             'genre': request.POST.get('genre', '').strip(),
-            'platform': platform,
             'platform_display': platform_labels.get(platform, ''),
-            'status': status,
             'status_display': status_labels.get(status, ''),
+            'play_mode_display': play_mode_labels.get(play_mode, ''),
+            'features_display': (
+                ', '.join(feature_names)
+                if feature_names
+                else 'Не выбраны'
+            ),
             'rating': request.POST.get('rating', ''),
             'description': request.POST.get('description', '').strip(),
         }

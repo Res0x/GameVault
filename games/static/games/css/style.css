@@ -1,4 +1,11 @@
 /* Базовые стили */
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
 body {
     font-family: Arial, Helvetica, sans-serif;
     font-size: 16px;
@@ -195,7 +202,6 @@ p {
 .form-control {
     display: block;
     width: 100%;
-    box-sizing: border-box;
     font-family: "Arial", "Helvetica", sans-serif;
     font-size: 16px;
     line-height: 1.5;
@@ -221,10 +227,70 @@ p {
     color: #777A9E;
 }
 
+.form-fieldset {
+    margin: 0;
+    padding: 16px;
+    border: 1px solid #2F3154;
+    border-radius: 12px;
+    background-color: #1E1F3A;
+}
+
+.form-legend {
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.4;
+    color: #F4F4F8;
+    padding: 0 8px;
+}
+
 .form-actions {
     display: flex;
     justify-content: flex-start;
     margin-top: 4px;
+}
+
+/* Чекбоксы и радио */
+
+.choice-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.choice-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.choice-input {
+    width: 18px;
+    height: 18px;
+    margin: 0;
+    flex-shrink: 0;
+    cursor: pointer;
+    accent-color: #8B5CF6;
+}
+
+.choice-label {
+    font-size: 16px;
+    line-height: 1.5;
+    color: #A6A7C8;
+    cursor: pointer;
+}
+
+.choice-item:hover .choice-label {
+    color: #F4F4F8;
+}
+
+.choice-input:checked + .choice-label {
+    color: #C084FC;
+    font-weight: 700;
+}
+
+.choice-input:focus-visible {
+    outline: 2px solid #6D28D9;
+    outline-offset: 2px;
 }
 
 /* Секции */
@@ -307,7 +373,7 @@ p {
     border: 1px solid #A855F7;
 }
 
-.button:focus {
+.button:focus-visible {
     outline: 2px solid #C084FC;
     outline-offset: 3px;
 }
@@ -522,8 +588,23 @@ p {
     .form-actions .button {
         display: block;
         width: 100%;
-        box-sizing: border-box;
         text-align: center;
+    }
+
+    .form-fieldset {
+        padding: 14px;
+    }
+
+    .choice-list {
+        gap: 10px;
+    }
+
+    .choice-item {
+        align-items: flex-start;
+    }
+
+    .choice-input {
+        margin: 3px 0 0 0;
     }
 
     .stats {
