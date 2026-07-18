@@ -1,10 +1,12 @@
-/* Базовые стили */
+/* Глобальная модель размеров */
 
 *,
 *::before,
 *::after {
     box-sizing: border-box;
 }
+
+/* Базовые стили */
 
 body {
     font-family: Arial, Helvetica, sans-serif;
@@ -23,6 +25,7 @@ body {
 a {
     color: #A6A7C8;
     text-decoration: none;
+    transition: color 160ms ease;
 }
 
 a:hover {
@@ -49,6 +52,9 @@ p {
     background-color: #15162B;
     padding: 16px 0;
     border-bottom: 1px solid #252747;
+    position: sticky;
+    top: 0;
+    z-index: 100;
 }
 
 .site-nav {
@@ -210,6 +216,8 @@ p {
     padding: 12px 14px;
     border: 1px solid #2F3154;
     border-radius: 10px;
+    transition: background-color 180ms ease,
+    border-color 180ms ease;
 }
 
 .form-control:hover {
@@ -277,6 +285,7 @@ p {
     line-height: 1.5;
     color: #A6A7C8;
     cursor: pointer;
+    transition: color 150ms ease;
 }
 
 .choice-item:hover .choice-label {
@@ -364,6 +373,9 @@ p {
     border: 1px solid #8B5CF6;
     border-radius: 12px;
     display: inline-block;
+    transition: color 180ms ease,
+    background-color 180ms ease,
+    border-color 180ms ease;
 }
 
 .button:hover {
@@ -378,12 +390,32 @@ p {
     outline-offset: 3px;
 }
 
+.button:active {
+    background-color: #6D28D9;
+    border-color: #6D28D9;
+}
+
+.button.back-to-top {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    z-index: 50;
+    width: 48px;
+    height: 48px;
+    padding: 0;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    line-height: 1;
+}
+
 /* Карточки игр */
 
 .games-list {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
     gap: 20px;
 }
 
@@ -396,6 +428,25 @@ p {
     width: 100%;
     border: 1px solid #2F3154;
     border-radius: 12px;
+}
+
+.game-cover-wrapper {
+    position: relative;
+}
+
+.game-status-badge {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    z-index: 1;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.2;
+    color: #FFFFFF;
+    background-color: #6D28D9;
+    padding: 6px 10px;
+    border: 1px solid #C084FC;
+    border-radius: 999px;
 }
 
 .game-caption {
@@ -412,7 +463,6 @@ p {
     padding: 24px;
     border: 1px solid #2F3154;
     border-radius: 16px;
-    flex: 1 1 300px;
 }
 
 .game-title {
@@ -546,6 +596,15 @@ p {
         padding: 12px 0;
     }
 
+    .button.back-to-top {
+        right: 12px;
+        bottom: 12px;
+        width: 44px;
+        height: 44px;
+        padding: 0;
+        font-size: 22px;
+    }
+
     .site-main {
         padding: 24px 0;
     }
@@ -575,6 +634,13 @@ p {
     .game-form {
         gap: 16px;
         margin: 20px auto 0 auto;
+    }
+
+    .game-status-badge {
+        top: 10px;
+        right: 10px;
+        font-size: 13px;
+        padding: 5px 8px;
     }
 
     .form-control {
@@ -616,17 +682,11 @@ p {
         flex: 1 1 auto;
     }
 
-    .games-list {
-        flex-direction: column;
-        gap: 16px;
-    }
-
     .game-figure {
         margin: 0 0 12px 0;
     }
 
     .game-card {
-        flex: 1 1 auto;
         padding: 20px;
     }
 

@@ -12,7 +12,10 @@
         {% for game in games %}
             <article class="game-card">
                 <figure class="game-figure">
-                    <img class="game-cover" src="{% static game.cover %}" alt="Обложка игры {{ game.title }}">
+                    <div class="game-cover-wrapper">
+                        <img class="game-cover" src="{% static game.cover %}" alt="Обложка игры {{ game.title }}">
+                        <span class="game-status-badge">{{ game.status }}</span>
+                    </div>
                     <figcaption class="game-caption">
                         {{ game.cover_caption }}
                     </figcaption>
@@ -22,7 +25,6 @@
                 <ul class="game-info">
                     <li class="game-info-item">Жанр: {{ game.genre }}</li>
                     <li class="game-info-item">Платформа: {{ game.platform }}</li>
-                    <li class="game-info-item">Статус: {{ game.status }}</li>
 
                     {% if game.rating %}
                         <li class="game-info-item">Рейтинг: {{ game.rating }}</li>
