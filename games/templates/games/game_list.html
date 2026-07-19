@@ -32,6 +32,9 @@
                         <li class="game-info-item">Без оценки</li>
                     {% endif %}
                 </ul>
+                <div class="game-card-actions">
+                    <a href="{% url 'game_detail' game.slug %}" class="button">Подробнее</a>
+                </div>
             </article>
         {% empty %}
             <p class="empty-message">Игр пока нет</p>

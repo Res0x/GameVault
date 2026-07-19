@@ -1,0 +1,78 @@
+{% extends 'games/base.html' %}
+{% load static %}
+{% block title %}{{ page_title }}{% endblock %}
+{% block content %}
+    <article class="game-detail">
+        <header class="page-header">
+            <h1 class="page-title">{{ game.title }}</h1>
+            <p class="page-subtitle">{{ game.subtitle }}</p>
+        </header>
+        <section class="section game-detail-hero">
+            <figure class="game-detail-hero-figure">
+                <div class="game-cover-wrapper">
+                    <img class="game-cover" src="{% static game.cover %}" alt="Обложка игры {{ game.title }}">
+                    <span class="game-status-badge">{{ game.status }}</span>
+                </div>
+                <figcaption class="game-caption">{{ game.cover_caption }}</figcaption>
+            </figure>
+            <div class="game-detail-content">
+                <h2 class="section-title">Об игре</h2>
+                <p class="game-detail-description"> {{ game.description }}</p>
+                <ul class="game-detail-meta">
+                    <li class="game-detail-meta-item">Жанр: {{ game.genre }}</li>
+                    <li class="game-detail-meta-item">Платформа: {{ game.platform }}</li>
+                    {% if game.rating %}
+                        <li class="game-detail-meta-item">Оценка: {{ game.rating }}</li>
+                    {% else %}
+                        <li class="game-detail-meta-item">Без оценки</li>
+                    {% endif %}
+                    <li class="game-detail-meta-item">Разработчик: {{ game.developer }}</li>
+                    <li class="game-detail-meta-item">Год выпуска: {{ game.release_year }}</li>
+                    <li class="game-detail-meta-item">Время прохождения: {{ game.playtime }}</li>
+                </ul>
+                <div class="game-detail-actions">
+                    <a href="{% url 'game_list' %}" class="button">Вернуться к списку</a>
+                </div>
+            </div>
+        </section>
+        <section class="section">
+            <h2 class="section-title">Почему стоит сыграть</h2>
+            <ul class="game-highlights">
+                {% for highlight in game.highlights %}
+                    <li class="game-highlight">{{highlight }}</li>
+                {% empty %}
+                    <li class="game-highlight">Особенности игры пока не добавлены</li>
+                {% endfor %}
+            </ul>
+        </section>
+        <section class="section">
+            <h2 class="section-title">Похожие игры</h2>
+            <div class="games-list">
+                {% for recommendation in recommendations %}
+                    <article class="game-card">
+                        <figure class="game-detail-hero-figure">
+                            <div class="game-cover-wrapper">
+                                <img class="game-cover" src="{% static recommendation.cover %}" alt="Обложка игры {{ game.title }}">
+                                <span class="game-status-badge">{{ recommendation.status }}</span>
+                            </div>
+                            <figcaption class="game-caption">{{ recommendation.cover_caption }}</figcaption>
+                        </figure>
+                        <h3 class="game-title">{{ recommendation.title }}</h3>
+                        <ul class="game-info">
+                            <li class="game-info-item">Жанр: {{ recommendation.genre }}</li>
+                            <li class="game-info-item>">Платформа: {{ recommendation.platform }}</li>
+                            {% if recommendation.rating %}
+                                <li class="game-info-item">{{ recommendation.rating }}</li>
+                            {% else %}
+                                <li class="game-info-item">Рейтинга пока нет</li>
+                            {% endif %}
+                        </ul>
+                        <a href="{% url 'game_detail' recommendation.slug %}" class="button">Подробнее</a>
+                    </article>
+                {% empty %}
+                    <p class="empty-message">Рекомендаций пока нет</p>
+                {% endfor %}
+            </div>
+        </section>
+    </article>
+{% endblock %}
