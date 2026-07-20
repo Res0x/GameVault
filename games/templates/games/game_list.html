@@ -7,7 +7,45 @@
     <div class="page-header">
         <h1 class="page-title">{{ page_title }}</h1>
     </div>
+    <section class="section search-section">
+        <h2 class="section-title">Поиск по библиотеке</h2>
 
+        <form method="get"
+              action="{% url 'game_list' %}"
+              class="search-form">
+
+            <div class="search-field">
+                <label for="search" class="form-label">
+                    Название или жанр
+                </label>
+
+                <input
+                    type="search"
+                    name="q"
+                    id="search"
+                    value="{{ q }}"
+                    placeholder="Например, Witcher или RPG"
+                    class="form-control search-input"
+                >
+            </div>
+
+            <div class="search-actions">
+                <button class="button" type="submit">
+                    Найти
+                </button>
+
+                {% if q %}
+                    <a href="{% url 'game_list' %}" class="search-reset">
+                        Сбросить
+                    </a>
+                {% endif %}
+            </div>
+        </form>
+
+        <p class="search-results">
+            Найдено игр: {{ games_count }}
+        </p>
+    </section>
     <div class="games-list">
         {% for game in games %}
             <article class="game-card">

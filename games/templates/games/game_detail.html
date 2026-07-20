@@ -8,7 +8,7 @@
             <p class="page-subtitle">{{ game.subtitle }}</p>
         </header>
         <section class="section game-detail-hero">
-            <figure class="game-detail-hero-figure">
+            <figure class="game-detail-figure">
                 <div class="game-cover-wrapper">
                     <img class="game-cover" src="{% static game.cover %}" alt="Обложка игры {{ game.title }}">
                     <span class="game-status-badge">{{ game.status }}</span>
@@ -50,9 +50,9 @@
             <div class="games-list">
                 {% for recommendation in recommendations %}
                     <article class="game-card">
-                        <figure class="game-detail-hero-figure">
+                        <figure class="game-figure">
                             <div class="game-cover-wrapper">
-                                <img class="game-cover" src="{% static recommendation.cover %}" alt="Обложка игры {{ game.title }}">
+                                <img class="game-cover" src="{% static recommendation.cover %}" alt="Обложка игры {{ recommendation.title }}">
                                 <span class="game-status-badge">{{ recommendation.status }}</span>
                             </div>
                             <figcaption class="game-caption">{{ recommendation.cover_caption }}</figcaption>
@@ -60,14 +60,16 @@
                         <h3 class="game-title">{{ recommendation.title }}</h3>
                         <ul class="game-info">
                             <li class="game-info-item">Жанр: {{ recommendation.genre }}</li>
-                            <li class="game-info-item>">Платформа: {{ recommendation.platform }}</li>
+                            <li class="game-info-item">Платформа: {{ recommendation.platform }}</li>
                             {% if recommendation.rating %}
-                                <li class="game-info-item">{{ recommendation.rating }}</li>
+                                <li class="game-info-item">Оценка: {{ recommendation.rating }}</li>
                             {% else %}
-                                <li class="game-info-item">Рейтинга пока нет</li>
+                                <li class="game-info-item">Без оценки</li>
                             {% endif %}
                         </ul>
-                        <a href="{% url 'game_detail' recommendation.slug %}" class="button">Подробнее</a>
+                        <div class="game-card-actions">
+                            <a href="{% url 'game_detail' recommendation.slug %}" class="button">Подробнее</a>
+                        </div>
                     </article>
                 {% empty %}
                     <p class="empty-message">Рекомендаций пока нет</p>

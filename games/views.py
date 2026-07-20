@@ -117,6 +117,8 @@ def home(request):
 
 
 def game_list(request):
+    search_query = request.GET.get('q', '').strip()
+    normalized_query = search_query.lower()
     games = [
         {
             'id': 1,
@@ -152,10 +154,16 @@ def game_list(request):
             'slug': 'hollow-knight',
         },
     ]
+    if normalized_query:
+        games = [game for game in games
+                 if normalized_query in game['title'].lower()
+                 or normalized_query in game['genre'].lower()]
 
     context = {
         'page_title': 'Список игр',
         'games': games,
+        'games_count': len(games),
+        'q': search_query,
     }
 
     return render(request, 'games/game_list.html', context)
