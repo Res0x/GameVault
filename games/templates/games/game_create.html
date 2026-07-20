@@ -9,54 +9,75 @@
   <section class="section">
     <h2 class="section-title">Данные об игре</h2>
     <p class="section-text">Заполни основные сведения об игре.</p>
+  {% if errors %}
+    <div class="form-errors">
+      <p class="form-errors-title">Не удалось обработать форму</p>
+      <p>Проверьте отмеченные поля и отправьте форму повторно.</p>
+    </div>
+  {% endif %}
   <form method="post" class="game-form" action="{% url 'game_create' %}">
     {% csrf_token %}
     <div class="form-group">
       <label for="game-title" class="form-label">Название игры</label>
       <input type="text" id="game-title"
              name="title" placeholder="Например, Baldur's Gate 3"
-             class="form-control" required>
+             class="form-control" required value="{{ form_data.title }}">
+      {% if errors.title %}
+        <p class="field-error">{{ errors.title }}</p>
+      {% endif %}
     </div>
     <div class="form-group">
       <label for="game-genre" class="form-label">Жанр</label>
       <input type="text" id="game-genre"
              name="genre" class="form-control"
-             placeholder="Например, RPG" required>
+             placeholder="Например, RPG" required value="{{ form_data.genre }}">
+      {% if errors.genre %}
+        <p class="field-error">{{ errors.genre }}</p>
+      {% endif %}
     </div>
     <div class="form-group">
       <label for="game-platform" class="form-label">Платформа</label>
       <select id="game-platform" name="platform"
               class="form-control" required>
         <option value="">Выберите платформу</option>
-        <option value="pc">PC</option>
-        <option value="playstation">PlayStation</option>
-        <option value="xbox">Xbox</option>
-        <option value="switch">Nintendo Switch</option>
+        <option value="pc" {% if form_data.platform == 'pc' %}selected{% endif %}>PC</option>
+        <option value="playstation" {% if form_data.platform == 'playstation' %}selected{% endif %}>PlayStation</option>
+        <option value="xbox" {% if form_data.platform == 'xbox' %}selected{% endif %}>Xbox</option>
+        <option value="switch" {% if form_data.platform == 'switch' %}selected{% endif %}>Nintendo Switch</option>
       </select>
+      {% if errors.platform %}
+        <p class="field-error">{{ errors.platform }}</p>
+      {% endif %}
     </div>
     <div class="form-group">
       <label for="game-status" class="form-label">Статус прохождения</label>
       <select id="game-status" name="status" class="form-control" required>
-        <option value="">Выберите статус</option>
-        <option value="planned">Хочу пройти</option>
-        <option value="playing">Прохожу</option>
-        <option value="completed">Пройдено</option>
+        <option value="" >Выберите статус</option>
+        <option value="planned" {% if form_data.status == "planned" %}selected{% endif %}>Хочу пройти</option>
+        <option value="playing" {% if form_data.status == "playing" %}selected{% endif %}>Прохожу</option>
+        <option value="completed" {% if form_data.status == "completed" %}selected{% endif %}>Пройдено</option>
       </select>
+      {% if errors.status %}
+        <p class="field-error">{{ errors.status }}</p>
+      {% endif %}
     </div>
 
     <fieldset class="form-fieldset">
       <legend class="form-legend">Режим прохождения</legend>
         <div class="choice-list">
         <div class="choice-item">
-          <input type="radio" id="game-mode-single" class="choice-input" name="play_mode" value="single" required>
-          <label for="game-mode-single" class="choice-label">Одиночная игра</label>
+          <input type="radio" id="game-mode-single" class="choice-input" name="play_mode" value="single"
+                 required  {% if form_data.play_mode == "single" %}checked{% endif %}>Одиночная игра>
+          <label for="game-mode-single" class="choice-label"</label>
         </div>
         <div class="choice-item">
-          <input type="radio" id="game-mode-multiplayer" class="choice-input" name="play_mode" value="multiplayer">
+          <input type="radio" id="game-mode-multiplayer" class="choice-input" name="play_mode" value="multiplayer"
+           {% if form_data.play_mode == "multiplayer" %}checked{% endif %}>
           <label for="game-mode-multiplayer" class="choice-label">Мультиплеер</label>
         </div>
         <div class="choice-item">
-          <input type="radio" id="game-mode-both" class="choice-input" value="both" name="play_mode">
+          <input type="radio" id="game-mode-both" class="choice-input" value="both" name="play_mode"
+           {% if form_data.play_mode == "both" %}checked{% endif %}>
           <label for="game-mode-both" class="choice-label">Одиночная игра и мультиплеер</label>
         </div>
       </div>
@@ -65,26 +86,32 @@
       <label for="game-rating" class="form-label">Оценка</label>
       <input type="number" id="game-rating"
              name="rating"  min="1" max="10"
-             class="form-control">
+             class="form-control" value="{{ form_data.rating }}">
     </div>
     <div class="form-group">
       <label for="game-description" class="form-label">Описание</label>
       <textarea id="game-description" name="description"
-      class="form-control" rows="5" placeholder="Кратко опиши игру"></textarea>
+      class="form-control" rows="5" placeholder="Кратко опиши игру">{{ form_data.description }}</textarea>
     </div>
     <fieldset class="form-fieldset">
       <legend class="form-legend">Особенности игры</legend>
       <div class="choice-list">
           <div class="choice-item">
-            <input type="checkbox" id="game-feature-story" name="features" value="story" class="choice-input">
+            <input type="checkbox" id="game-feature-story" name="features"
+                   value="story" class="choice-input"
+                   {% if "story" in form_data.features %}checked{% endif %}>
             <label for="game-feature-story" class="choice-label">Сюжетная игра</label>
           </div>
           <div class="choice-item">
-            <input type="checkbox" id="game-feature-open-world" name="features" value="open_world" class="choice-input">
+            <input type="checkbox" id="game-feature-open-world" name="features"
+                   value="open_world" class="choice-input"
+                   {% if "open_world" in form_data.features %}checked{% endif %}>
             <label for="game-feature-open-world" class="choice-label">Открытый мир</label>
           </div>
           <div class="choice-item">
-            <input type="checkbox" id="game-feature-coop" name="features" value="coop" class="choice-input">
+            <input type="checkbox" id="game-feature-coop" name="features"
+                   value="coop" class="choice-input"
+                   {% if "coop" in form_data.features %}checked{% endif %}>
             <label for="game-feature-coop" class="choice-label">Кооператив</label>
           </div>
       </div>

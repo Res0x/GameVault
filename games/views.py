@@ -118,6 +118,7 @@ def home(request):
 
 def game_list(request):
     search_query = request.GET.get('q', '').strip()
+    status = request.GET.get('status', '').strip()
     normalized_query = search_query.lower()
     games = [
         {
@@ -126,6 +127,7 @@ def game_list(request):
             'genre': 'RPG',
             'platform': 'PC',
             'status': 'Пройдено',
+            'status_code': 'completed',
             'rating': 10,
             'cover': 'games/images/witcher-3.svg',
             'cover_caption': 'Фэнтезийное приключение в открытом мире',
@@ -137,6 +139,7 @@ def game_list(request):
             'genre': 'RPG',
             'platform': 'PC',
             'status': 'Прохожу',
+            'status_code': 'playing',
             'rating': 9,
             'cover': 'games/images/cyberpunk-2077.svg',
             'cover_caption': 'История в неоновом мегаполисе будущего',
@@ -148,22 +151,28 @@ def game_list(request):
             'genre': 'Metroidvania',
             'platform': 'PC',
             'status': 'Хочу пройти',
+            'status_code': 'planned',
             'rating': None,
             'cover': 'games/images/hollow-knight.svg',
             'cover_caption': 'Путешествие по мрачному подземному королевству',
             'slug': 'hollow-knight',
         },
     ]
+    statuses = ('planned', 'playing', 'completed')
     if normalized_query:
         games = [game for game in games
                  if normalized_query in game['title'].lower()
                  or normalized_query in game['genre'].lower()]
-
+    if status not in statuses:
+        status = ''
+    if status:
+        games = [game for game in games if game['status_code'] == status]
     context = {
         'page_title': 'Список игр',
         'games': games,
         'games_count': len(games),
         'q': search_query,
+        'selected_status': status,
     }
 
     return render(request, 'games/game_list.html', context)
@@ -212,6 +221,19 @@ def ratings(request):
 def game_create(request):
     submitted_game = None
 
+    errors = {}
+
+    form_data = {
+        'title': '',
+        'genre': '',
+        'platform': '',
+        'status': '',
+        'play_mode': '',
+        'features': [],
+        'rating': '',
+        'description': '',
+    }
+
     platform_labels = {
         'pc': 'PC',
         'playstation': 'PlayStation',
@@ -242,31 +264,67 @@ def game_create(request):
         status = request.POST.get('status', '')
         play_mode = request.POST.get('play_mode', '')
         selected_features = request.POST.getlist('features')
+        title = request.POST.get('title', '')
+        genre = request.POST.get('genre', '')
+        rating = request.POST.get('rating', '')
+        description = request.POST.get('description', '')
+
+        form_data = {
+            'title': title,
+            'genre': genre,
+            'platform': platform,
+            'status': status,
+            'play_mode': play_mode,
+            'features': selected_features,
+            'rating': rating,
+            'description': description,
+        }
+
+        platform = platform.strip()
+        status = status.strip()
+        title = title.strip()
+        genre = genre.strip()
+        rating = rating.strip()
+        description = description.strip()
 
         feature_names = [
             feature_labels[feature]
             for feature in selected_features
             if feature in feature_labels
         ]
+        if not title:
+            errors['title'] = 'Введите название игры.'
 
-        submitted_game = {
-            'title': request.POST.get('title', '').strip(),
-            'genre': request.POST.get('genre', '').strip(),
-            'platform_display': platform_labels.get(platform, ''),
-            'status_display': status_labels.get(status, ''),
-            'play_mode_display': play_mode_labels.get(play_mode, ''),
-            'features_display': (
-                ', '.join(feature_names)
-                if feature_names
-                else 'Не выбраны'
-            ),
-            'rating': request.POST.get('rating', ''),
-            'description': request.POST.get('description', '').strip(),
-        }
+        if not genre:
+            errors['genre'] = 'Введите жанр игры.'
+
+        if platform not in platform_labels:
+            errors['platform'] = 'Выберите допустимую платформу.'
+
+        if status not in status_labels:
+            errors['status'] = 'Выберите допустимый статус.'
+
+        if not errors:
+            submitted_game = {
+                'title': title,
+                'genre': genre,
+                'platform_display': platform_labels.get(platform, ''),
+                'status_display': status_labels.get(status, ''),
+                'play_mode_display': play_mode_labels.get(play_mode, ''),
+                'features_display': (
+                    ', '.join(feature_names)
+                    if feature_names
+                    else 'Не выбраны'
+                ),
+                'rating': rating,
+                'description': description,
+            }
 
     context = {
         'page_title': 'Добавить игру',
         'submitted_game': submitted_game,
+        'errors': errors,
+        'form_data': form_data,
     }
 
     return render(request, 'games/game_create.html', context)

@@ -217,6 +217,7 @@ p {
 
 .search-form {
     display: flex;
+    flex-wrap: wrap;
     align-items: flex-end;
     gap: 12px;
 }
@@ -282,6 +283,10 @@ p {
     line-height: 1.5;
     color: var(--color-text-muted);
     margin: 16px 0 0;
+}
+
+.search-status {
+    flex-basis: 220px;
 }
 
 /* Формы */
@@ -541,11 +546,36 @@ p {
     transform: translateY(0) scale(0.94);
 }
 
+/* Ошибки */
+
+.form-errors {
+    border: 1px solid var(--color-accent);
+    background-color: var(--color-bg-card);
+    padding: 16px;
+    margin-bottom: 20px;
+    border-radius: 12px;
+}
+
+.form-errors-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    margin-bottom: 6px;
+}
+
+.field-error {
+    font-size: 14px;
+    line-height: 1.4;
+    color: var(--color-accent-bright);
+    margin-top: 6px;
+    margin-bottom: 0;
+}
+
 /* Карточки игр */
 
 .games-list {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
     gap: 20px;
 }
 
@@ -1011,6 +1041,11 @@ p {
 
     .search-results {
         margin-top: 14px;
+    }
+
+    .search-status {
+        flex-basis: auto;
+        width: 100%;
     }
 
 }

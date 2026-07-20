@@ -9,7 +9,6 @@
     </div>
     <section class="section search-section">
         <h2 class="section-title">Поиск по библиотеке</h2>
-
         <form method="get"
               action="{% url 'game_list' %}"
               class="search-form">
@@ -29,12 +28,25 @@
                 >
             </div>
 
+            <div class="search-status">
+                <label for="status" class="form-label">Выбор статуса</label>
+                <select name="status" id="status" class="form-control">
+                    <option value="">Все статусы</option>
+                    <option value="completed"
+                            {% if selected_status == "completed" %}selected{% endif %}>Пройдено</option>
+                    <option value="playing"
+                            {% if selected_status == "playing" %}selected{% endif %}>Прохожу</option>
+                    <option value="planned"
+                            {% if selected_status == "planned" %}selected{% endif %}>Хочу пройти</option>
+                </select>
+            </div>
+
             <div class="search-actions">
                 <button class="button" type="submit">
                     Найти
                 </button>
 
-                {% if q %}
+                {% if q or selected_status %}
                     <a href="{% url 'game_list' %}" class="search-reset">
                         Сбросить
                     </a>
