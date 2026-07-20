@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import Http404
+from django.http import Http404, HttpResponseNotAllowed
 
 GAME_DETAILS = {
     'witcher-3': {
@@ -87,6 +87,7 @@ GAME_DETAILS = {
         ],
     },
 }
+
 
 def home(request):
     context = {
@@ -177,6 +178,7 @@ def game_list(request):
 
     return render(request, 'games/game_list.html', context)
 
+
 def ratings(request):
     rated_games = [
         {
@@ -218,7 +220,10 @@ def ratings(request):
 
     return render(request, 'games/ratings.html', context)
 
+
 def game_create(request):
+    if request.method not in ('GET', 'POST'):
+        return HttpResponseNotAllowed(['GET', 'POST'])
     submitted_game = None
 
     errors = {}
@@ -329,6 +334,7 @@ def game_create(request):
 
     return render(request, 'games/game_create.html', context)
 
+
 def game_detail(request, game_slug):
     game = GAME_DETAILS.get(game_slug)
 
@@ -348,3 +354,23 @@ def game_detail(request, game_slug):
     }
 
     return render(request, 'games/game_detail.html', context)
+
+
+def games_by_year(request, release_year):
+    games = [
+        game
+        for game in GAME_DETAILS.values()
+        if game['release_year'] == release_year
+    ]
+
+    if not games:
+        raise Http404(f'Игры за {release_year} год не найдены')
+
+    context = {
+        'page_title': f'Игры за {release_year} год',
+        'release_year': release_year,
+        'games': games,
+        'games_amount': len(games),
+    }
+
+    return render(request, 'games/games_by_year.html', context)

@@ -1,0 +1,37 @@
+{% extends 'games/base.html' %}
+{% load static %}
+
+{% block title %}{{ page_title }}{% endblock %}
+{% block content %}
+    <div class="page-header">
+        <h1 class="page-title">{{ page_title }}</h1>
+    </div>
+    <section class="section">
+        <h2 class="section-title">{{ release_year }}</h2>
+        <p class="section-text">Количество найденных игр: {{ games_amount }}</p>
+        <div class="games-list">
+        {% for game in games %}
+            <article class="game-card">
+                <figure class="game-figure">
+                    <div class="game-cover-wrapper">
+                        <img class="game-cover" src="{% static game.cover %}" alt="Обложка игры {{ game.title }}">
+                        <span class="game-status-badge">{{ game.status }}</span>
+                    </div>
+                </figure>
+                <h2 class="game-title">{{ game.title }}</h2>
+
+                <ul class="game-info">
+                    <li class="game-info-item">Жанр: {{ game.genre }}</li>
+                    <li class="game-info-item">Разработчик: {{ game.developer }}</li>
+                    <li class="game-info-item">Год выпуска: {{ game.release_year }}</li>
+                </ul>
+                <div class="game-card-actions">
+                    <a href="{% url 'game_detail' game.slug %}" class="button">Подробнее</a>
+                </div>
+            </article>
+        {% empty %}
+            <p class="empty-message">Игр пока нет</p>
+        {% endfor %}
+    </div>
+    </section>
+{% endblock %}

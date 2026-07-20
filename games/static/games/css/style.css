@@ -710,7 +710,8 @@ p {
 }
 
 .game-detail-actions {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     flex-wrap: wrap;
     gap: 12px;
 }
@@ -926,10 +927,6 @@ p {
         flex-basis: auto;
         max-width: none;
         width: 100%;
-    }
-
-    .game-detail-actions {
-        display: block;
     }
 
     .game-detail-actions .button {
