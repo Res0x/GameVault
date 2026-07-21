@@ -31,8 +31,8 @@
                     <li class="game-detail-meta-item">Время прохождения: {{ game.playtime }}</li>
                 </ul>
                 <div class="game-detail-actions">
-                    <a href="{% url 'game_list' %}" class="button">Вернуться к списку</a>
-                    <a href="{% url 'games_by_year' game.release_year %}" class="button">Другие игры за {{ game.release_year }} год</a>
+                    <a href="{% url 'games:game_list' %}" class="button">Вернуться к списку</a>
+                    <a href="{% url 'games:games_by_year' release_year=game.release_year %}" class="button">Другие игры за {{ game.release_year }} год</a>
                 </div>
             </div>
         </section>
@@ -69,7 +69,7 @@
                             {% endif %}
                         </ul>
                         <div class="game-card-actions">
-                            <a href="{% url 'game_detail' recommendation.slug %}" class="button">Подробнее</a>
+                            <a href="{% url 'games:game_detail' game_slug=game.slug %}" class="button">Подробнее</a>
                         </div>
                     </article>
                 {% empty %}

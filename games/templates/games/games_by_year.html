@@ -26,7 +26,7 @@
                     <li class="game-info-item">Год выпуска: {{ game.release_year }}</li>
                 </ul>
                 <div class="game-card-actions">
-                    <a href="{% url 'game_detail' game.slug %}" class="button">Подробнее</a>
+                    <a href="{% url 'games:game_detail' game_slug=game.slug %}" class="button">Подробнее</a>
                 </div>
             </article>
         {% empty %}

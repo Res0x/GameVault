@@ -1,5 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import Http404, HttpResponseNotAllowed
+from django.urls import reverse
 
 GAME_DETAILS = {
     'witcher-3': {
@@ -374,3 +375,19 @@ def games_by_year(request, release_year):
     }
 
     return render(request, 'games/games_by_year.html', context)
+
+def latest_game(request):
+    if not GAME_DETAILS:
+        raise Http404('Игры еще не добавлены')
+
+    newest_game = max(
+        GAME_DETAILS.values(),
+        key=lambda game: game['release_year'],
+    )
+
+    latest_game_page = reverse(
+        'game:game_detail',
+        kwargs={'game_slug': newest_game['slug']},
+    )
+
+    return redirect(latest_game_page)

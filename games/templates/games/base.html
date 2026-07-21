@@ -11,10 +11,10 @@
     <header class="site-header">
         <div class="container">
             <nav class="site-nav">
-                <a href="{% url 'home' %}">Главная</a>
-                <a href="{% url 'game_list' %}">Список игр</a>
-                <a href="{% url 'ratings' %}">Рейтинг</a>
-                <a href="{% url 'game_create' %}">Добавить игру</a>
+                <a href="{% url 'games:home' %}">Главная</a>
+                <a href="{% url 'games:game_list' %}">Список игр</a>
+                <a href="{% url 'games:ratings' %}">Рейтинг</a>
+                <a href="{% url 'games:game_create' %}">Добавить игру</a>
             </nav>
         </div>
     </header>
