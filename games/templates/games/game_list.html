@@ -65,11 +65,8 @@
                 <figure class="game-figure">
                     <div class="game-cover-wrapper">
                         <img class="game-cover" src="{% static game.cover %}" alt="Обложка игры {{ game.title }}">
-                        <span class="game-status-badge">{{ game.status }}</span>
+                        <span class="game-status-badge">{{ game.get_status_display }}</span>
                     </div>
-                    <figcaption class="game-caption">
-                        {{ game.cover_caption }}
-                    </figcaption>
                 </figure>
                 <h2 class="game-title">{{ game.title }}</h2>
 
@@ -88,7 +85,22 @@
                 </div>
             </article>
         {% empty %}
-            <p class="empty-message">Игр пока нет</p>
+            <section class="empty-state">
+                <span class="empty-state-icon">◇</span>
+                {% if q or selected_status %}
+                    <h2 class="empty-state-title">Ничего не найдено</h2>
+                    <p class="empty-state-text">Попробуй изменить поисковый запрос или выбрать другой статус.</p>
+                    <div class="empty-state-actions">
+                        <a href="{% url 'games:game_list' %}" class="button">Сбросить поиск</a>
+                    </div>
+                {% else %}
+                <h2 class="empty-state-title">Библиотека пока пуста</h2>
+                    <p class="empty-state-text">Ваша библиотека пока пуста, добавьте первую игру!</p>
+                    <div class="empty-state-actions">
+                        <a href="{% url 'games:game_create' %}" class="button">Добавить игру</a>
+                    </div>
+                {% endif %}
+            </section>
         {% endfor %}
     </div>
 {% endblock %}

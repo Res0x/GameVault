@@ -13,6 +13,7 @@ class GameAdmin(admin.ModelAdmin):
         'developer',
         'release_year',
         'rating',
+        'status',
     )
 
     search_fields = (
@@ -26,6 +27,7 @@ class GameAdmin(admin.ModelAdmin):
     list_filter = (
         'platform',
         'release_year',
+        'status',
     )
 
     prepopulated_fields = {'slug': ('title',)}

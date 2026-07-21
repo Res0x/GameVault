@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect
 from django.http import Http404, HttpResponseNotAllowed
 from django.urls import reverse
+from .models import Game
+from django.db.models import Q
 
 GAME_DETAILS = {
     'witcher-3': {
@@ -121,58 +123,23 @@ def home(request):
 def game_list(request):
     search_query = request.GET.get('q', '').strip()
     status = request.GET.get('status', '').strip()
-    normalized_query = search_query.lower()
-    games = [
-        {
-            'id': 1,
-            'title': 'The Witcher 3',
-            'genre': 'RPG',
-            'platform': 'PC',
-            'status': 'Пройдено',
-            'status_code': 'completed',
-            'rating': 10,
-            'cover': 'games/images/witcher-3.svg',
-            'cover_caption': 'Фэнтезийное приключение в открытом мире',
-            'slug': 'witcher-3',
-        },
-        {
-            'id': 2,
-            'title': 'Cyberpunk 2077',
-            'genre': 'RPG',
-            'platform': 'PC',
-            'status': 'Прохожу',
-            'status_code': 'playing',
-            'rating': 9,
-            'cover': 'games/images/cyberpunk-2077.svg',
-            'cover_caption': 'История в неоновом мегаполисе будущего',
-            'slug': 'cyberpunk-2077',
-        },
-        {
-            'id': 3,
-            'title': 'Hollow Knight',
-            'genre': 'Metroidvania',
-            'platform': 'PC',
-            'status': 'Хочу пройти',
-            'status_code': 'planned',
-            'rating': None,
-            'cover': 'games/images/hollow-knight.svg',
-            'cover_caption': 'Путешествие по мрачному подземному королевству',
-            'slug': 'hollow-knight',
-        },
-    ]
-    statuses = ('planned', 'playing', 'completed')
-    if normalized_query:
-        games = [game for game in games
-                 if normalized_query in game['title'].lower()
-                 or normalized_query in game['genre'].lower()]
+    games = Game.objects.all()
+    statuses = Game.Status.values
+
     if status not in statuses:
         status = ''
+
+    if search_query:
+        games = games.filter(Q(title__icontains=search_query) |
+                             Q(genre__icontains=search_query))
     if status:
-        games = [game for game in games if game['status_code'] == status]
+        games = games.filter(status=status)
+
+    games = games.order_by('-release_year', 'title')
     context = {
         'page_title': 'Список игр',
         'games': games,
-        'games_count': len(games),
+        'games_count': games.count(),
         'q': search_query,
         'selected_status': status,
     }
@@ -358,36 +325,31 @@ def game_detail(request, game_slug):
 
 
 def games_by_year(request, release_year):
-    games = [
-        game
-        for game in GAME_DETAILS.values()
-        if game['release_year'] == release_year
-    ]
-
-    if not games:
+    games = Game.objects.all()
+    games = games.filter(release_year=release_year).order_by('title')
+    if not games.exists():
         raise Http404(f'Игры за {release_year} год не найдены')
 
     context = {
         'page_title': f'Игры за {release_year} год',
         'release_year': release_year,
         'games': games,
-        'games_amount': len(games),
+        'games_amount': games.count(),
     }
 
     return render(request, 'games/games_by_year.html', context)
 
 def latest_game(request):
-    if not GAME_DETAILS:
+    games = Game.objects.all()
+    games = games.order_by('-release_year', 'title')
+    newest_game = games.first()
+    if not newest_game:
         raise Http404('Игры еще не добавлены')
 
-    newest_game = max(
-        GAME_DETAILS.values(),
-        key=lambda game: game['release_year'],
-    )
 
     latest_game_page = reverse(
-        'game:game_detail',
-        kwargs={'game_slug': newest_game['slug']},
+        'games:game_detail',
+        kwargs={'game_slug': newest_game.slug},
     )
 
     return redirect(latest_game_page)

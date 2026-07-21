@@ -15,7 +15,7 @@
                 <figure class="game-figure">
                     <div class="game-cover-wrapper">
                         <img class="game-cover" src="{% static game.cover %}" alt="Обложка игры {{ game.title }}">
-                        <span class="game-status-badge">{{ game.status }}</span>
+                        <span class="game-status-badge">{{ game.get_status_display }}</span>
                     </div>
                 </figure>
                 <h2 class="game-title">{{ game.title }}</h2>
