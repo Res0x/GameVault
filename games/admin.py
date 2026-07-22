@@ -1,10 +1,21 @@
 from django.contrib import admin
 
-from .models import Game
+from .models import Game, GameHighlight
 
+
+class GameHighlightInline(admin.TabularInline):
+    model = GameHighlight
+    fields = (
+        'text',
+        'position'
+    )
+    extra = 1
 
 @admin.register(Game)
 class GameAdmin(admin.ModelAdmin):
+    inlines = (
+        GameHighlightInline,
+    )
     list_display = (
         'id',
         'title',
@@ -21,8 +32,6 @@ class GameAdmin(admin.ModelAdmin):
         'genre',
         'developer',
     )
-
-    ordering = ('-release_year', 'title')
 
     list_filter = (
         'platform',

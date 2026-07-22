@@ -48,28 +48,32 @@
             </div>
         </div>
     </section>
-
-    <section class="section">
-        <h2 class="section-title">Игра недели</h2>
-        <article class="featured-game">
-            <figure class="featured-game-figure">
-                <img class="featured-game-cover"
-                     src="{% static featured_game.cover %}"
-                     alt="Обложка игры {{ featured_game.title }}">
-                <figcaption class="featured-game-caption">
-                    {{ featured_game.cover_caption }}
-                </figcaption>
-            </figure>
-            <div class="featured-game-content">
-                <h3 class="featured-game-title">{{ featured_game.title }}</h3>
-                <p class="featured-game-text">{{ featured_game.description }}</p>
-                <ul class="featured-game-info">
-                    <li class="featured-game-info-item">Статус: {{ featured_game.status }}</li>
-                    <li class="featured-game-info-item">Рейтинг: {{ featured_game.rating }}</li>
-                </ul>
-                <a href="{% url 'games:game_list' %}" class="button">Перейти к списку игр</a>
-            </div>
-        </article>
-    </section>
-
+    {% if featured_game %}
+        <section class="section">
+            <h2 class="section-title">Игра с наивысшим рейтингом</h2>
+            <article class="featured-game">
+                <figure class="featured-game-figure">
+                    <img class="featured-game-cover"
+                         src="{% static featured_game.cover %}"
+                         alt="Обложка игры {{ featured_game.title }}">
+                </figure>
+                <div class="featured-game-content">
+                    <h3 class="featured-game-title">{{ featured_game.title }}</h3>
+                    <p class="featured-game-text">{{ featured_game.description }}</p>
+                    <ul class="featured-game-info">
+                        <li class="featured-game-info-item">Статус: {{ featured_game.get_status_display }}</li>
+                        <li class="featured-game-info-item">Рейтинг: {{ featured_game.rating }}</li>
+                    </ul>
+                    <a href="{% url 'games:game_detail' game_slug=featured_game.slug %}" class="button">
+                        Подробнее
+                    </a>
+                </div>
+            </article>
+        </section>
+    {% else %}
+        <section class="section">
+            <h2 class="section-title">Игра с наивысшим рейтингом</h2>
+            <p class="empty-message">Пока нет игр с оценкой.</p>
+        </section>
+    {% endif %}
 {% endblock %}

@@ -11,9 +11,8 @@
             <figure class="game-detail-figure">
                 <div class="game-cover-wrapper">
                     <img class="game-cover" src="{% static game.cover %}" alt="Обложка игры {{ game.title }}">
-                    <span class="game-status-badge">{{ game.status }}</span>
+                    <span class="game-status-badge">{{ game.get_status_display }}</span>
                 </div>
-                <figcaption class="game-caption">{{ game.cover_caption }}</figcaption>
             </figure>
             <div class="game-detail-content">
                 <h2 class="section-title">Об игре</h2>
@@ -36,27 +35,26 @@
                 </div>
             </div>
         </section>
-        <section class="section">
+            <section class="section">
             <h2 class="section-title">Почему стоит сыграть</h2>
             <ul class="game-highlights">
-                {% for highlight in game.highlights %}
-                    <li class="game-highlight">{{highlight }}</li>
+                {% for highlight in game.highlights.all %}
+                    <li class="game-highlight">{{ highlight.text }}</li>
                 {% empty %}
-                    <li class="game-highlight">Особенности игры пока не добавлены</li>
+                    <li class="empty-message">Особенности игры пока не добавлены.</li>
                 {% endfor %}
             </ul>
         </section>
         <section class="section">
-            <h2 class="section-title">Похожие игры</h2>
+            <h2 class="section-title">Другие игры</h2>
             <div class="games-list">
                 {% for recommendation in recommendations %}
                     <article class="game-card">
                         <figure class="game-figure">
                             <div class="game-cover-wrapper">
                                 <img class="game-cover" src="{% static recommendation.cover %}" alt="Обложка игры {{ recommendation.title }}">
-                                <span class="game-status-badge">{{ recommendation.status }}</span>
+                                <span class="game-status-badge">{{ recommendation.get_status_display }}</span>
                             </div>
-                            <figcaption class="game-caption">{{ recommendation.cover_caption }}</figcaption>
                         </figure>
                         <h3 class="game-title">{{ recommendation.title }}</h3>
                         <ul class="game-info">
@@ -69,7 +67,7 @@
                             {% endif %}
                         </ul>
                         <div class="game-card-actions">
-                            <a href="{% url 'games:game_detail' game_slug=game.slug %}" class="button">Подробнее</a>
+                            <a href="{% url 'games:game_detail' game_slug=recommendation.slug %}" class="button">Подробнее</a>
                         </div>
                     </article>
                 {% empty %}

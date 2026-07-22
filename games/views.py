@@ -1,98 +1,22 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import Http404, HttpResponseNotAllowed
 from django.urls import reverse
 from .models import Game
 from django.db.models import Q
 
-GAME_DETAILS = {
-    'witcher-3': {
-        'slug': 'witcher-3',
-        'title': 'The Witcher 3: Wild Hunt',
-        'subtitle': 'Большое сюжетное приключение в мрачном фэнтезийном мире',
-        'genre': 'RPG',
-        'platform': 'PC',
-        'status': 'Пройдено',
-        'rating': 10,
-        'developer': 'CD Projekt Red',
-        'release_year': 2015,
-        'playtime': '120 часов',
-        'cover': 'games/images/witcher-3.svg',
-        'cover_caption': 'Обложка The Witcher 3: Wild Hunt',
-        'description': (
-            'История охотника на чудовищ, который путешествует по открытому '
-            'миру, выполняет заказы и принимает решения, влияющие на сюжет.'
-        ),
-        'highlights': [
-            'Большой открытый мир с самостоятельными историями.',
-            'Развитая система заданий и диалогов.',
-            'Решения игрока влияют на развитие событий.',
-            'Большое количество дополнительного контента.',
-        ],
-        'recommendation_slugs': [
-            'cyberpunk-2077',
-            'hollow-knight',
-        ],
-    },
-    'cyberpunk-2077': {
-        'slug': 'cyberpunk-2077',
-        'title': 'Cyberpunk 2077',
-        'subtitle': 'Футуристическая RPG о наемнике из Найт-Сити',
-        'genre': 'Action RPG',
-        'platform': 'PC',
-        'status': 'Прохожу',
-        'rating': 9,
-        'developer': 'CD Projekt Red',
-        'release_year': 2020,
-        'playtime': '85 часов',
-        'cover': 'games/images/cyberpunk-2077.svg',
-        'cover_caption': 'Обложка Cyberpunk 2077',
-        'description': (
-            'Приключение в технологичном мегаполисе, где игрок развивает '
-            'персонажа, выполняет задания и выбирает собственный стиль игры.'
-        ),
-        'highlights': [
-            'Атмосферный город с большим количеством районов.',
-            'Разные способы выполнения заданий.',
-            'Гибкая система развития персонажа.',
-            'Сюжетные и дополнительные цепочки заданий.',
-        ],
-        'recommendation_slugs': [
-            'witcher-3',
-            'hollow-knight',
-        ],
-    },
-    'hollow-knight': {
-        'slug': 'hollow-knight',
-        'title': 'Hollow Knight',
-        'subtitle': 'Исследование таинственного подземного королевства',
-        'genre': 'Metroidvania',
-        'platform': 'PC',
-        'status': 'Хочу пройти',
-        'rating': None,
-        'developer': 'Team Cherry',
-        'release_year': 2017,
-        'playtime': 'Не указано',
-        'cover': 'games/images/hollow-knight.svg',
-        'cover_caption': 'Обложка Hollow Knight',
-        'description': (
-            'Атмосферное приключение с исследованием связанных локаций, '
-            'сражениями, поиском секретов и постепенным открытием новых путей.'
-        ),
-        'highlights': [
-            'Связанный мир с большим количеством секретов.',
-            'Выразительный визуальный стиль.',
-            'Разнообразные противники и боссы.',
-            'Постепенное открытие новых способностей.',
-        ],
-        'recommendation_slugs': [
-            'witcher-3',
-            'cyberpunk-2077',
-        ],
-    },
-}
-
 
 def home(request):
+    games = Game.objects.all()
+    total_games = games.count()
+    playing_games = games.filter(status=Game.Status.PLAYING).count()
+    completed_games = games.filter(status=Game.Status.COMPLETED).count()
+    planned_games = games.filter(status=Game.Status.PLANNED).count()
+
+    featured_game = (games
+                     .filter(rating__isnull=False)
+                     .order_by('-rating', '-release_year', 'title')
+                     .first())
+
     context = {
         'page_title': 'GameVault',
         'subtitle': 'Личная библиотека видеоигр',
@@ -100,21 +24,11 @@ def home(request):
             'Здесь можно хранить игры, которые ты проходишь, '
             'уже прошел или только планируешь пройти.'
         ),
-        'total_games': 12,
-        'playing_games': 3,
-        'completed_games': 5,
-        'planned_games': 4,
-        'featured_game': {
-            'title': 'The Witcher 3',
-            'description': (
-                'Сюжетная ролевая игра с открытым миром, '
-                'сложными заданиями и последствиями принятых решений.'
-            ),
-            'status': 'Пройдено',
-            'rating': 10,
-            'cover': 'games/images/witcher-3.svg',
-            'cover_caption': 'Фэнтезийное приключение в открытом мире',
-        },
+        'total_games': total_games,
+        'playing_games': playing_games,
+        'completed_games': completed_games,
+        'planned_games': planned_games,
+        'featured_game': featured_game,
     }
 
     return render(request, 'games/home.html', context)
@@ -135,7 +49,6 @@ def game_list(request):
     if status:
         games = games.filter(status=status)
 
-    games = games.order_by('-release_year', 'title')
     context = {
         'page_title': 'Список игр',
         'games': games,
@@ -304,19 +217,11 @@ def game_create(request):
 
 
 def game_detail(request, game_slug):
-    game = GAME_DETAILS.get(game_slug)
-
-    if game is None:
-        raise Http404('Игра не найдена')
-
-    recommendations = [
-        GAME_DETAILS[slug]
-        for slug in game['recommendation_slugs']
-        if slug in GAME_DETAILS
-    ]
+    game = get_object_or_404(Game, slug=game_slug)
+    recommendations = Game.objects.exclude(pk=game.pk)[:2]
 
     context = {
-        'page_title': game['title'],
+        'page_title': game.title,
         'game': game,
         'recommendations': recommendations,
     }
