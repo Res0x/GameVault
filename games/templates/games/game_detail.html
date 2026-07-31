@@ -46,6 +46,16 @@
             </ul>
         </section>
         <section class="section">
+            <h2 class="section-title">Особенности</h2>
+            <ul class="feature-list">
+                {% for feature in game.features.all %}
+                    <li class="feature-chip">{{ feature.name }}</li>
+                {% empty %}
+                    <li class="empty-message">Особенности пока не выбраны.</li>
+                {% endfor %}
+            </ul>
+        </section>
+        <section class="section">
             <h2 class="section-title">Другие игры</h2>
             <div class="games-list">
                 {% for recommendation in recommendations %}

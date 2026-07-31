@@ -16,7 +16,7 @@
 
             <div class="search-field">
                 <label for="search" class="form-label">
-                    Название или жанр
+                    Название, жанр или особенность
                 </label>
 
                 <input
@@ -24,7 +24,7 @@
                     name="q"
                     id="search"
                     value="{{ q }}"
-                    placeholder="Например, Witcher или RPG"
+                    placeholder="Например, Witcher, RPG или открытый мир"
                     class="form-control search-input"
                 >
             </div>
@@ -80,6 +80,16 @@
                         <li class="game-info-item">Без оценки</li>
                     {% endif %}
                 </ul>
+                <div class="game-card-features">
+                    <p class="game-card-features-title">Особенности</p>
+                    <ul class="feature-list">
+                        {% for feature in game.features.all %}
+                            <li class="feature-chip">{{ feature.name }}</li>
+                        {% empty %}
+                            <li class="game-card-features-empty">Не выбраны</li>
+                        {% endfor %}
+                    </ul>
+                </div>
                 <div class="game-card-actions">
                     <a href="{% url 'games:game_detail' game_slug=game.slug %}" class="button">Подробнее</a>
                 </div>

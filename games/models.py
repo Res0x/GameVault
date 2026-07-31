@@ -3,6 +3,18 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db.models import Q
 
 
+class Feature(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+    slug = models.SlugField(max_length=100, unique=True)
+
+    class Meta:
+        ordering = ['name']
+        verbose_name = 'Особенность'
+        verbose_name_plural = 'Особенности'
+
+    def __str__(self):
+        return self.name
+
 class Game(models.Model):
 
     class Status(models.TextChoices):
@@ -26,6 +38,11 @@ class Game(models.Model):
     cover = models.CharField(max_length=255, blank=True, default='')
     subtitle = models.CharField(max_length=255, blank=True, default='')
     playtime = models.CharField(max_length=100, blank=True, default='')
+    features = models.ManyToManyField(
+        Feature,
+        related_name='games',
+        blank=True,
+    )
 
     class Meta:
         ordering = ['-release_year', 'title']
@@ -66,3 +83,4 @@ class GameHighlight(models.Model):
             short_text += '...'
 
         return f'{self.game.title}: {short_text}'
+

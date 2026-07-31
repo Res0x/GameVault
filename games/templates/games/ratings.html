@@ -7,18 +7,51 @@
         <h1 class="page-title">{{ page_title }}</h1>
     </div>
     <section class="section">
-        <h2 class="section-title">Оценки игр</h2>
-        <p class="section-text">Игры расположены по убыванию пользовательской оценки.</p>
+        <h2 class="section-title">Общая статистика</h2>
+        <div class="stats">
+            <article class="stat-card">
+                <p class="stat-label">Оценено игр</p>
+                <p class="stat-value">{{ rating_summary.total_rated }}</p>
+            </article>
+            <article class="stat-card">
+                <p class="stat-label">Средняя оценка</p>
+                {% if rating_summary.average_rating is not None %}
+                    <p class="stat-value">{{ rating_summary.average_rating|floatformat:1 }}</p>
+                {% else %}
+                    <p class="stat-value">—</p>
+                {% endif %}
+            </article>
+            <article class="stat-card">
+                <p class="stat-label">Максимальная оценка</p>
+                {% if rating_summary.highest_rating %}
+                    <p class="stat-value">{{ rating_summary.highest_rating }}</p>
+                {% else %}
+                    <p class="stat-value">—</p>
+                {% endif %}
+            </article>
+            <article class="stat-card">
+                <p class="stat-label">Минимальная оценка</p>
+                {% if rating_summary.lowest_rating is not None %}
+                <p class="stat-value">{{ rating_summary.lowest_rating }}</p>
+                {% else %}
+                    <p class="stat-value">—</p>
+                {% endif %}
+            </article>
+        </div>
+    </section>
+    <section class="section">
+        <h2 class="section-title">Рейтинг всех оцененных игр</h2>
         <div class="table-wrapper">
             <table class="games-table">
-                <caption class="table-caption">Игры с выставленной оценкой</caption>
-                <thead>
+                <thead class="table-caption">
                     <tr>
                         <th class="table-heading" scope="col">Место</th>
-                        <th class="table-heading" scope="col">Игра</th>
+                        <th class="table-heading" scope="col">Название</th>
                         <th class="table-heading" scope="col">Жанр</th>
+                        <th class="table-heading" scope="col">Год</th>
                         <th class="table-heading" scope="col">Статус</th>
-                        <th class="table-heading" scope="col">Оценка</th>
+                        <th class="table-heading" scope="col">Рейтинг</th>
+                        <th class="table-heading" scope="col">Особенностей</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -27,13 +60,47 @@
                             <td class="table-cell">{{ forloop.counter }}</td>
                             <td class="table-cell">{{ game.title }}</td>
                             <td class="table-cell">{{ game.genre }}</td>
-                            <td class="table-cell">{{ game.status }}</td>
+                            <td class="table-cell">{{ game.release_year }}</td>
+                            <td class="table-cell">{{ game.get_status_display }}</td>
                             <td class="table-cell">{{ game.rating }}</td>
+                            <td class="table-cell">{{ game.features_count }}</td>
+                        </tr>
                     {% empty %}
-                            <td class="table-empty" colspan="5">Оцененных игр пока нет</td>
+                        <tr>
+                            <td class="table-empty" colspan="7">Оценённых игр пока нет.</td>
                         </tr>
                     {% endfor %}
-                    
+                </tbody>
+            </table>
+        </div>
+    </section>
+    <section class="section">
+        <h2 class="section-title">Статистика игр по жанрам</h2>
+        <div class="table-wrapper">
+            <table class="games-table">
+                <thead class="table-caption">
+                    <tr>
+                        <th class="table-heading" scope="col">Жанр</th>
+                        <th class="table-heading" scope="col">Количество игр</th>
+                        <th class="table-heading" scope="col">Средняя оценка</th>
+                        <th class="table-heading" scope="col">Лучшая оценка</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for genre_stat in genre_stats %}
+                        <tr>
+                            <td class="table-cell">{{ genre_stat.genre }}</td>
+                            <td class="table-cell">{{ genre_stat.games_count }}</td>
+                            <td class="table-cell">{{ genre_stat.average_rating|floatformat:1 }}</td>
+                            <td class="table-cell">{{ genre_stat.highest_rating }}</td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td class="table-empty" colspan="4">
+                                Статистики по жанрам пока нет.
+                            </td>
+                        </tr>
+                    {% endfor %}
                 </tbody>
             </table>
         </div>

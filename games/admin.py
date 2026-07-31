@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Game, GameHighlight
+from .models import Game, GameHighlight, Feature
 
 
 class GameHighlightInline(admin.TabularInline):
@@ -39,5 +39,23 @@ class GameAdmin(admin.ModelAdmin):
         'status',
     )
 
+    filter_horizontal = (
+        'features',
+    )
+
     prepopulated_fields = {'slug': ('title',)}
     empty_value_display = 'Не указано'
+
+@admin.register(Feature)
+class FeatureAdmin(admin.ModelAdmin):
+    list_display = (
+        'id',
+        'name',
+        'slug'
+    )
+
+    search_fields = (
+        'name',
+    )
+
+    prepopulated_fields = {'slug': ('name',)}
