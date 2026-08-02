@@ -1,9 +1,11 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import Http404, HttpResponseNotAllowed
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from .models import Game, Feature
 from django.db.models import Q, Avg, Count, Min, Max
 from .forms import GameForm
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, DetailView
 
 def home(request):
     games = Game.objects.all()
@@ -34,41 +36,68 @@ def home(request):
     return render(request, 'games/home.html', context)
 
 
-def game_list(request):
-    search_query = request.GET.get('q', '').strip()
-    status = request.GET.get('status', '').strip()
-    games = Game.objects.prefetch_related('features')
-    statuses = Game.Status.values
+class GameListView(ListView):
+    model = Game
+    template_name = 'games/game_list.html'
+    context_object_name = 'games'
+    paginate_by = 9
 
-    if status not in statuses:
-        status = ''
+    def get_queryset(self):
+        games = super().get_queryset()
+        games = games.prefetch_related('features')
+        self.search_query = self.request.GET.get('q', '').strip()
+        self.status = self.request.GET.get('status', '').strip()
 
-    if search_query:
-        normalized_query = search_query.casefold()
+        if self.status not in Game.Status.values:
+            self.status = ''
 
-        matching_feature_ids = [
-            feature.pk
-            for feature in Feature.objects.only('pk', 'name')
-            if normalized_query in feature.name.casefold()
-        ]
+        if self.search_query:
+            normalized_query = self.search_query.casefold()
 
-        games = games.filter(
-            Q(title__icontains=search_query)
-            | Q(genre__icontains=search_query)
-            | Q(features__pk__in=matching_feature_ids)
-        ).distinct()
-    if status:
-        games = games.filter(status=status)
+            matching_feature_ids = [
+                feature.pk
+                for feature in Feature.objects.only('pk', 'name')
+                if normalized_query in feature.name.casefold()
+            ]
 
-    context = {
-        'page_title': 'Список игр',
-        'games': games,
-        'games_count': len(games),
-        'q': search_query,
-        'selected_status': status,
-    }
+            games = games.filter(
+                Q(title__icontains=self.search_query)
+                | Q(genre__icontains=self.search_query)
+                | Q(features__pk__in=matching_feature_ids)
+            ).distinct()
 
-    return render(request, 'games/game_list.html', context)
+        if self.status:
+            games = games.filter(status=self.status)
+        return games
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = 'Список игр'
+        context['games_count'] = context['paginator'].count
+        context['q'] = self.search_query
+        context['selected_status'] = self.status
+
+        request_copy = self.request.GET.copy()
+        request_copy.pop('page', None)
+        request_copy = request_copy.urlencode()
+        if request_copy:
+            request_copy = '&' + request_copy
+        context['query_string'] = request_copy
+
+        return context
+
+
+class GameDetailView(DetailView):
+    model = Game
+    template_name = 'games/game_detail.html'
+    context_object_name = 'game'
+    slug_url_kwarg = 'game_slug'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = self.object.title
+        context['recommendations'] = Game.objects.exclude(pk=self.object.pk)[:2]
+        return context
 
 
 def ratings(request):
@@ -122,43 +151,57 @@ def ratings(request):
     return render(request, 'games/ratings.html', context)
 
 
-def game_create(request):
-    if request.method not in ('GET', 'POST'):
-        return HttpResponseNotAllowed(['GET', 'POST'])
+class GameCreateView(CreateView):
+    model = Game
+    form_class = GameForm
+    template_name = 'games/game_form.html'
 
-    elif request.method == 'POST':
-        form = GameForm(request.POST)
-        if form.is_valid():
-            game = form.save()
-            game_page = reverse(
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = 'Добавить игру'
+        context['form_heading'] = 'Данные об игре'
+        context['form_description'] = 'Заполни основные сведения об игре.'
+        context['submit_text'] = 'Добавить игру'
+        return context
+
+    def get_success_url(self):
+        return reverse(
                 'games:game_detail',
-                kwargs={'game_slug': game.slug}
-            )
-            return redirect(game_page)
-    else:
-        form = GameForm()
-    context = {
-        'page_title': 'Добавить игру',
-        'form_heading': 'Данные об игре',
-        'form_description': 'Заполни основные сведения об игре.',
-        'submit_text': 'Добавить игру',
-        'form': form,
-    }
-
-    return render(request, 'games/game_form.html', context)
+                kwargs={'game_slug': self.object.slug},
+        )
 
 
-def game_detail(request, game_slug):
-    game = get_object_or_404(Game, slug=game_slug)
-    recommendations = Game.objects.exclude(pk=game.pk)[:2]
+class GameUpdateView(UpdateView):
+    model = Game
+    form_class = GameForm
+    template_name = 'games/game_form.html'
+    slug_url_kwarg = 'game_slug'
 
-    context = {
-        'page_title': game.title,
-        'game': game,
-        'recommendations': recommendations,
-    }
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = f'Редактирование {self.object.title}'
+        context['form_heading'] = 'Изменение данных'
+        context['form_description'] = 'Измени сведения об игре и сохрани результат.'
+        context['submit_text'] = 'Сохранить изменения'
+        return context
 
-    return render(request, 'games/game_detail.html', context)
+    def get_success_url(self):
+        return reverse(
+            'games:game_detail',
+            kwargs={'game_slug': self.object.slug},
+        )
+
+
+class GameDeleteView(DeleteView):
+    model = Game
+    template_name = 'games/game_confirm_delete.html'
+    slug_url_kwarg = 'game_slug'
+    success_url = reverse_lazy('games:game_list')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = f'Удаление игры {self.object.title}'
+        return context
 
 
 def games_by_year(request, release_year):
@@ -190,28 +233,3 @@ def latest_game(request):
     )
 
     return redirect(latest_game_page)
-
-def game_edit(request, game_slug):
-    if request.method not in ('GET', 'POST'):
-        return HttpResponseNotAllowed(['GET', 'POST'])
-
-    game = get_object_or_404(Game, slug=game_slug)
-    if request.method == 'GET':
-        form = GameForm(instance=game)
-    else:
-        form = GameForm(request.POST, instance=game)
-        if form.is_valid():
-            updated_game = form.save()
-            updated_game_page = reverse(
-                'games:game_detail',
-                kwargs={'game_slug': updated_game.slug},
-            )
-            return redirect(updated_game_page)
-    context = {
-        'page_title': f'Редактирование {game.title}',
-        'form_heading': 'Изменение данных',
-        'form_description': 'Измени сведения об игре и сохрани результат.',
-        'submit_text': 'Сохранить изменения',
-        'form': form,
-    }
-    return render(request, 'games/game_form.html', context)

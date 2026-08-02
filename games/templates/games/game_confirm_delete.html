@@ -1,0 +1,13 @@
+{% extends 'games/base.html' %}
+{% block header %}{{ page_title }}{% endblock header %}
+{% block content %}
+    <section class="section">
+        <h2 class="section-title">{{ game.title }}</h2>
+        <p class="section-text">Вы действительно хотите удалить {{ game.title }}?</p>
+        <form method="post" class="game-detail-actions">
+            {% csrf_token %}
+            <button type="submit" class="button button-danger">Удалить игру</button>
+            <a class="button" href="{% url 'games:game_detail' game_slug=game.slug %}">Отмена</a>
+        </form>
+    </section>
+{% endblock %}

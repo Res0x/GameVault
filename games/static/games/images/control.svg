@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="500" viewBox="0 0 800 500">
+<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#111827"/><stop offset="1" stop-color="#9D174D"/></linearGradient></defs>
+<rect width="800" height="500" rx="24" fill="url(#g)"/>
+<circle cx="620" cy="235" r="112" fill="#FBCFE8" opacity=".12"/><circle cx="650" cy="205" r="66" fill="none" stroke="#FBCFE8" stroke-width="12" opacity=".16"/>
+<text x="55" y="330" fill="#F4F4F8" font-size="62" font-family="Arial, sans-serif" font-weight="700">Control</text>
+<text x="58" y="385" fill="#D1D5DB" font-size="28" font-family="Arial, sans-serif">Action • PC</text>
+</svg>

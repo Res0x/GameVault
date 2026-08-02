@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="500" viewBox="0 0 800 500">
+<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#1F2937"/><stop offset="1" stop-color="#7C2D12"/></linearGradient></defs>
+<rect width="800" height="500" rx="24" fill="url(#g)"/>
+<rect x="540" y="110" width="150" height="250" rx="26" fill="#FED7AA" opacity=".12" transform="rotate(10 615 235)"/>
+<text x="55" y="270" fill="#F4F4F8" font-size="62" font-family="Arial, sans-serif" font-weight="700">Spider-Man:</text><text x="55" y="334" fill="#F4F4F8" font-size="62" font-family="Arial, sans-serif" font-weight="700">Miles Morales</text>
+<text x="58" y="415" fill="#D1D5DB" font-size="28" font-family="Arial, sans-serif">Action Adventure • PC</text>
+</svg>

@@ -63,12 +63,13 @@
         {% for game in games %}
             <article class="game-card">
                 <figure class="game-figure">
-                    <div class="game-cover-wrapper">
-                        <img class="game-cover" src="{% static game.cover %}" alt="Обложка игры {{ game.title }}">
-                        <span class="game-status-badge">{{ game.get_status_display }}</span>
-                    </div>
+                    <a href="{% url 'games:game_detail' game_slug=game.slug %}" class="game-cover-link">
+                        <div class="game-cover-wrapper">
+                            <img class="game-cover" src="{% static game.cover %}" alt="Обложка игры {{ game.title }}">
+                            <span class="game-status-badge">{{ game.get_status_display }}</span>
+                        </div>
+                    </a>
                 </figure>
-                <h2 class="game-title">{{ game.title }}</h2>
 
                 <ul class="game-info">
                     <li class="game-info-item">Жанр: {{ game.genre }}</li>
@@ -90,9 +91,6 @@
                         {% endfor %}
                     </ul>
                 </div>
-                <div class="game-card-actions">
-                    <a href="{% url 'games:game_detail' game_slug=game.slug %}" class="button">Подробнее</a>
-                </div>
             </article>
         {% empty %}
             <section class="empty-state">
@@ -113,4 +111,17 @@
             </section>
         {% endfor %}
     </div>
+    {% if is_paginated %}
+        <nav class="pagination">
+            {% if page_obj.has_previous %}
+                <a href="?page=1{{ query_string }}" class="button pagination-link">Первая</a>
+                <a href="?page={{ page_obj.previous_page_number }}{{ query_string }}" class="button pagination-link"><</a>
+            {% endif %}
+            <span class="pagination-current">Страница {{ page_obj.number }} из {{ paginator.num_pages }}</span>
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}{{ query_string }}" class="button pagination-link">></a>
+                <a href="?page={{ paginator.num_pages }}{{ query_string }}" class="button pagination-link">Последняя</a>
+            {% endif %}
+        </nav>
+    {% endif %}
 {% endblock %}

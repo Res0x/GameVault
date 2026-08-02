@@ -10,7 +10,7 @@
         <section class="section game-detail-hero">
             <figure class="game-detail-figure">
                 <div class="game-cover-wrapper">
-                    <img class="game-cover" src="{% static game.cover %}" alt="Обложка игры {{ game.title }}">
+                    <img class="game-cover game-detail-cover" src="{% static game.cover %}" alt="Обложка игры {{ game.title }}">
                     <span class="game-status-badge">{{ game.get_status_display }}</span>
                 </div>
             </figure>
@@ -33,6 +33,7 @@
                     <a href="{% url 'games:game_list' %}" class="button">Вернуться к списку</a>
                     <a href="{% url 'games:game_edit' game_slug=game.slug %}" class="button">Редактировать игру</a>
                     <a href="{% url 'games:games_by_year' release_year=game.release_year %}" class="button">Другие игры за {{ game.release_year }} год</a>
+                    <a href="{% url 'games:game_delete' game_slug=game.slug %}" class="button button-danger">Удалить игру</a>
                 </div>
             </div>
         </section>
