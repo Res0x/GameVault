@@ -139,10 +139,13 @@ def game_create(request):
         form = GameForm()
     context = {
         'page_title': 'Добавить игру',
+        'form_heading': 'Данные об игре',
+        'form_description': 'Заполни основные сведения об игре.',
+        'submit_text': 'Добавить игру',
         'form': form,
     }
 
-    return render(request, 'games/game_create.html', context)
+    return render(request, 'games/game_form.html', context)
 
 
 def game_detail(request, game_slug):
@@ -187,3 +190,28 @@ def latest_game(request):
     )
 
     return redirect(latest_game_page)
+
+def game_edit(request, game_slug):
+    if request.method not in ('GET', 'POST'):
+        return HttpResponseNotAllowed(['GET', 'POST'])
+
+    game = get_object_or_404(Game, slug=game_slug)
+    if request.method == 'GET':
+        form = GameForm(instance=game)
+    else:
+        form = GameForm(request.POST, instance=game)
+        if form.is_valid():
+            updated_game = form.save()
+            updated_game_page = reverse(
+                'games:game_detail',
+                kwargs={'game_slug': updated_game.slug},
+            )
+            return redirect(updated_game_page)
+    context = {
+        'page_title': f'Редактирование {game.title}',
+        'form_heading': 'Изменение данных',
+        'form_description': 'Измени сведения об игре и сохрани результат.',
+        'submit_text': 'Сохранить изменения',
+        'form': form,
+    }
+    return render(request, 'games/game_form.html', context)

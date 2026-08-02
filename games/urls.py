@@ -16,4 +16,9 @@ urlpatterns = [
         views.game_detail,
         name='game_detail',
     ),
+    path(
+        'games/<slug:game_slug>/edit/',
+        views.game_edit,
+        name='game_edit',
+    ),
 ]

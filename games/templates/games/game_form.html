@@ -7,9 +7,9 @@
     <h1 class="page-title">{{ page_title }}</h1>
   </div>
   <section class="section">
-    <h2 class="section-title">Данные об игре</h2>
-    <p class="section-text">Заполни основные сведения об игре.</p>
-  <form method="post" class="game-form" action="{% url 'games:game_create' %}" novalidate>
+    <h2 class="section-title">{{ form_heading }}</h2>
+    <p class="section-text">{{ form_description }}</p>
+  <form method="post" class="game-form" novalidate>
     {% csrf_token %}
     {% if form.non_field_errors %}
       <div class="form-errors">
@@ -42,7 +42,7 @@
                       </div>
                   {% endfor %}
               </div>
-              {% for error in form.features.errors %}
+              {% for error in field.errors %}
                   <p class="field-error">{{ error }}</p>
               {% endfor %}
             </fieldset>
@@ -50,7 +50,7 @@
         </div>
     {% endfor %}
     <div class="form-actions">
-      <button type="submit" class="button">Добавить игру</button>
+      <button type="submit" class="button">{{ submit_text }}</button>
     </div>
   </form>
 </section>
