@@ -1,5 +1,7 @@
 from django import forms
 from django.core.exceptions import ValidationError
+from django.contrib.auth.forms import AuthenticationForm
+
 from .models import Game
 from datetime import date
 
@@ -123,3 +125,20 @@ class GameForm(forms.ModelForm):
             self.add_error('rating',
                            'Нельзя оценить игру, которая еще не пройдена.')
         return cleaned_data
+
+class GameAuthenticationForm(AuthenticationForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        for field in self.fields.values():
+            field.widget.attrs['class'] = 'form-control'
+
+        self.fields['username'].label = 'Имя пользователя'
+        self.fields['username'].widget.attrs['placeholder'] = (
+            'Введите имя пользователя'
+        )
+
+        self.fields['password'].label = 'Пароль'
+        self.fields['password'].widget.attrs['placeholder'] = (
+            'Введите пароль'
+        )

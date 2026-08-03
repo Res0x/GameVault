@@ -1,11 +1,14 @@
+from django.contrib.auth.views import LoginView
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import Http404, HttpResponseNotAllowed
 from django.urls import reverse, reverse_lazy
-from .models import Game, Feature
 from django.db.models import Q, Avg, Count, Min, Max
-from .forms import GameForm
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import ListView, DetailView
+from django.contrib.auth.mixins import LoginRequiredMixin
+
+from .forms import GameForm, GameAuthenticationForm
+from .models import Game, Feature
 
 def home(request):
     games = Game.objects.all()
@@ -151,7 +154,7 @@ def ratings(request):
     return render(request, 'games/ratings.html', context)
 
 
-class GameCreateView(CreateView):
+class GameCreateView(LoginRequiredMixin, CreateView):
     model = Game
     form_class = GameForm
     template_name = 'games/game_form.html'
@@ -171,7 +174,7 @@ class GameCreateView(CreateView):
         )
 
 
-class GameUpdateView(UpdateView):
+class GameUpdateView(LoginRequiredMixin, UpdateView):
     model = Game
     form_class = GameForm
     template_name = 'games/game_form.html'
@@ -192,7 +195,7 @@ class GameUpdateView(UpdateView):
         )
 
 
-class GameDeleteView(DeleteView):
+class GameDeleteView(LoginRequiredMixin, DeleteView):
     model = Game
     template_name = 'games/game_confirm_delete.html'
     slug_url_kwarg = 'game_slug'
@@ -233,3 +236,11 @@ def latest_game(request):
     )
 
     return redirect(latest_game_page)
+
+class GameLoginView(LoginView):
+    template_name = 'games/login.html'
+    authentication_form = GameAuthenticationForm
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = 'Вход'
+        return context

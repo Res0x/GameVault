@@ -118,6 +118,11 @@ p {
     flex-wrap: wrap;
 }
 
+.nav-auth-form {
+    display: inline-flex;
+    margin: 0;
+}
+
 .site-main {
     font-size: 20px;
     background-color: var(--color-bg-main);
@@ -425,7 +430,6 @@ p {
     border-color: var(--color-accent);
     background-color: var(--color-bg-surface);
     outline: 2px solid var(--color-accent-dark);
-    outline-offset: 2px;
 }
 
 .form-control::placeholder {
