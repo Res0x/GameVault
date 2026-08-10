@@ -25,6 +25,7 @@ class GameAdmin(admin.ModelAdmin):
         'release_year',
         'rating',
         'status',
+        'added_by',
     )
 
     search_fields = (
@@ -37,6 +38,7 @@ class GameAdmin(admin.ModelAdmin):
         'platform',
         'release_year',
         'status',
+        'added_by',
     )
 
     filter_horizontal = (

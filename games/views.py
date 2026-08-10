@@ -5,9 +5,9 @@ from django.urls import reverse, reverse_lazy
 from django.db.models import Q, Avg, Count, Min, Max
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import ListView, DetailView
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 
-from .forms import GameForm, GameAuthenticationForm
+from .forms import GameForm, GameAuthenticationForm, GameUserCreationForm
 from .models import Game, Feature
 
 def home(request):
@@ -95,7 +95,6 @@ class GameDetailView(DetailView):
     template_name = 'games/game_detail.html'
     context_object_name = 'game'
     slug_url_kwarg = 'game_slug'
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['page_title'] = self.object.title
@@ -154,10 +153,15 @@ def ratings(request):
     return render(request, 'games/ratings.html', context)
 
 
-class GameCreateView(LoginRequiredMixin, CreateView):
+class GameCreateView(PermissionRequiredMixin, CreateView):
     model = Game
     form_class = GameForm
     template_name = 'games/game_form.html'
+    permission_required = 'games.add_game'
+
+    def form_valid(self, form):
+        form.instance.added_by = self.request.user
+        return super().form_valid(form)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -174,11 +178,12 @@ class GameCreateView(LoginRequiredMixin, CreateView):
         )
 
 
-class GameUpdateView(LoginRequiredMixin, UpdateView):
+class GameUpdateView(PermissionRequiredMixin, UpdateView):
     model = Game
     form_class = GameForm
     template_name = 'games/game_form.html'
     slug_url_kwarg = 'game_slug'
+    permission_required = 'games.change_game'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -195,11 +200,12 @@ class GameUpdateView(LoginRequiredMixin, UpdateView):
         )
 
 
-class GameDeleteView(LoginRequiredMixin, DeleteView):
+class GameDeleteView(PermissionRequiredMixin, DeleteView):
     model = Game
     template_name = 'games/game_confirm_delete.html'
     slug_url_kwarg = 'game_slug'
     success_url = reverse_lazy('games:game_list')
+    permission_required = 'games.delete_game'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -243,4 +249,14 @@ class GameLoginView(LoginView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['page_title'] = 'Вход'
+        return context
+
+class GameRegisterView(CreateView):
+    form_class = GameUserCreationForm
+    template_name = 'games/register.html'
+    success_url = reverse_lazy('games:login')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = 'Регистрация'
         return context

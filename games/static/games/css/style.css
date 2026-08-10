@@ -379,6 +379,94 @@ p {
     flex-basis: 220px;
 }
 
+/* =========================
+   Авторизация и регистрация
+   ========================= */
+
+.auth-page {
+    display: flex;
+    justify-content: center;
+    padding: 16px 0 32px;
+}
+
+.auth-card {
+    width: 100%;
+    max-width: 560px;
+    padding: 32px;
+    background-color: var(--color-bg-surface);
+    border: 1px solid var(--color-border-soft);
+    border-radius: 20px;
+}
+
+.auth-header {
+    margin-bottom: 28px;
+}
+
+.auth-title {
+    font-size: 34px;
+}
+
+.auth-subtitle {
+    font-size: 15px;
+    line-height: 1.5;
+    color: var(--color-text-secondary);
+    margin: 18px 0 0;
+}
+
+.auth-form {
+    max-width: none;
+    margin: 0;
+    gap: 20px;
+}
+
+.auth-form .form-group {
+    gap: 7px;
+}
+
+.auth-form .form-help {
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--color-text-muted);
+    margin: 0;
+}
+
+.auth-form .form-help p {
+    margin: 0;
+}
+
+.auth-form .form-help ul {
+    margin: 4px 0 0;
+    padding-left: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.auth-form .form-help li {
+    margin: 0;
+}
+
+.auth-actions {
+    margin-top: 4px;
+}
+
+.auth-submit {
+    width: 100%;
+}
+
+.auth-switch {
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--color-text-muted);
+    text-align: center;
+    margin: 20px 0 0;
+}
+
+.form-help {
+    font-size: 14px;
+    color: var(--color-text-muted);
+    line-height: 1.5;
+}
 
 /* =========================
    Формы
@@ -457,7 +545,6 @@ p {
     justify-content: flex-start;
     margin-top: 4px;
 }
-
 
 /* Чекбоксы и радио */
 

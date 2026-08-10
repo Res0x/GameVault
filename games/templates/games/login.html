@@ -1,34 +1,39 @@
 {% extends 'games/base.html' %}
 {% block title %}{{ page_title }}{% endblock %}
 {% block content %}
-    <div class="page-header">
-        <h1>{{ page_title }}</h1>
-    </div>
-    <section class="section">
-        <form method="post" class="game-form">
-            {% csrf_token %}
-            {% if next %}
-                <input type="hidden" name="next" value="{{ next }}">
-            {% endif %}
-            {% if form.non_field_errors %}
-              <div class="form-errors">
-                  {% for error in form.non_field_errors %}
-                      <p class="field-error">{{ error }}</p>
-                  {% endfor %}
-              </div>
-            {% endif %}
-            {% for field in form %}
-                <div class="form-group">
-                    <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
-                    {{ field }}
-                    {% for error in field.errors %}
-                        <p class="field-error">{{ error }}</p>
-                    {% endfor %}
+    <section class="auth-page">
+         <div class="auth-card">
+            <header class="auth-header">
+                <h1 class="page-title auth-title">{{ page_title }}</h1>
+                <p class="auth-subtitle">
+                    Войди в свой аккаунт, чтобы пользоваться GameVault.
+                </p>
+            </header>
+            <form method="post" class="game-form">
+                {% csrf_token %}
+                {% if next %}
+                    <input type="hidden" name="next" value="{{ next }}">
+                {% endif %}
+                {% if form.non_field_errors %}
+                  <div class="form-errors">
+                      {% for error in form.non_field_errors %}
+                          <p class="field-error">{{ error }}</p>
+                      {% endfor %}
+                  </div>
+                {% endif %}
+                {% for field in form %}
+                    <div class="form-group">
+                        <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                        {{ field }}
+                        {% for error in field.errors %}
+                            <p class="field-error">{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+                <div class="form-actions">
+                  <button type="submit" class="button">Войти</button>
                 </div>
-            {% endfor %}
-            <div class="form-actions">
-              <button type="submit" class="button">Войти</button>
-            </div>
-        </form>
+            </form>
+         </div>
     </section>
 {% endblock %}

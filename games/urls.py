@@ -6,7 +6,16 @@ from . import views
 app_name = 'games'
 
 urlpatterns = [
-    path('', views.home, name='home'),
+    path(
+        '',
+        views.home,
+        name='home'
+    ),
+    path(
+        'register/',
+        views.GameRegisterView.as_view(),
+        name='register'
+    ),
     path(
         'login/',
         views.GameLoginView.as_view(),

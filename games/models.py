@@ -1,7 +1,7 @@
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db.models import Q
-
+from django.conf import settings
 
 class Feature(models.Model):
     name = models.CharField(max_length=100, unique=True)
@@ -42,6 +42,13 @@ class Game(models.Model):
         Feature,
         related_name='games',
         blank=True,
+    )
+    added_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+        related_name='games_added',
     )
 
     class Meta:

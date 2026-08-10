@@ -1,6 +1,6 @@
 from django import forms
 from django.core.exceptions import ValidationError
-from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 
 from .models import Game
 from datetime import date
@@ -142,3 +142,17 @@ class GameAuthenticationForm(AuthenticationForm):
         self.fields['password'].widget.attrs['placeholder'] = (
             'Введите пароль'
         )
+
+class GameUserCreationForm(UserCreationForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.widget.attrs['class'] = 'form-control'
+
+        self.fields['username'].label = 'Имя пользователя'
+        self.fields['password1'].label = 'Пароль'
+        self.fields['password2'].label = 'Подтверждение пароля'
+
+        self.fields['username'].widget.attrs['placeholder'] = 'Придумайте имя пользователя'
+        self.fields['password1'].widget.attrs['placeholder'] = 'Придумайте пароль'
+        self.fields['password2'].widget.attrs['placeholder'] = 'Повторите пароль'

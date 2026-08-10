@@ -28,12 +28,19 @@
                     <li class="game-detail-meta-item">Разработчик: {{ game.developer }}</li>
                     <li class="game-detail-meta-item">Год выпуска: {{ game.release_year }}</li>
                     <li class="game-detail-meta-item">Время прохождения: {{ game.playtime }}</li>
+                    {% if game.added_by %}
+                        <li class="game-detail-meta-item">Добавил: {{ game.added_by }}</li>
+                    {% else %}
+                        <li class="game-detail-meta-item">Добавил: неизвестно</li>
+                    {% endif %}
                 </ul>
                 <div class="game-detail-actions">
                     <a href="{% url 'games:game_list' %}" class="button">Вернуться к списку</a>
                     <a href="{% url 'games:games_by_year' release_year=game.release_year %}" class="button">Другие игры за {{ game.release_year }} год</a>
-                    {% if user.is_authenticated %}
+                    {% if perms.games.change_game %}
                         <a href="{% url 'games:game_edit' game_slug=game.slug %}" class="button">Редактировать игру</a>
+                    {% endif %}
+                    {% if perms.games.delete_game %}
                         <a href="{% url 'games:game_delete' game_slug=game.slug %}" class="button button-danger">Удалить игру</a>
                     {% endif %}
                 </div>
