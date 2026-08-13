@@ -26,6 +26,46 @@ urlpatterns = [
         name='logout',
     ),
     path(
+      'password-change/',
+        views.GamePasswordChangeView.as_view(),
+        name='change_password',
+    ),
+    path(
+        'password-change/done/',
+        views.GamePasswordChangeDoneView.as_view(),
+        name='change_password_done',
+    ),
+    path(
+        'password-reset/',
+        views.GamePasswordResetView.as_view(),
+        name='password_reset',
+    ),
+    path(
+        'password-reset/done/',
+        views.GamePasswordResetDoneView.as_view(),
+        name='password_reset_done',
+    ),
+    path(
+        'password-reset/confirm/<uidb64>/<token>/',
+        views.GamePasswordResetConfirmView.as_view(),
+        name='password_reset_confirm',
+    ),
+    path(
+        'password-reset/complete/',
+        views.GamePasswordResetCompleteView.as_view(),
+        name='password_reset_complete',
+    ),
+    path(
+        'profile/',
+        views.GameProfileView.as_view(),
+        name='profile',
+    ),
+    path(
+        'profile/edit/',
+        views.GameProfileUpdateView.as_view(),
+        name='profile_edit',
+    ),
+    path(
         'games/',
         views.GameListView.as_view(),
         name='game_list'

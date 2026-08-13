@@ -18,7 +18,7 @@
                     {% if perms.games.add_game %}
                         <a href="{% url 'games:game_create' %}">Добавить игру</a>
                     {% endif %}
-                    <p>{{user.username}}</p>
+                    <a href="{% url 'games:profile' %}">Мой профиль</a>
                     <form method="POST" class="nav-auth-form" action="{% url 'games:logout' %}">
                         {% csrf_token %}
                         <button class="button" type="submit">Выйти</button>

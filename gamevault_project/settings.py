@@ -125,3 +125,6 @@ STATIC_URL = 'static/'
 LOGIN_URL = 'games:login'
 LOGIN_REDIRECT_URL = 'games:home'
 LOGOUT_REDIRECT_URL = 'games:home'
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+DEFAULT_FROM_EMAIL = 'gamevault@gmail.com'

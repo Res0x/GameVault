@@ -1,4 +1,5 @@
-from django.contrib.auth.views import LoginView
+from django.contrib.auth.views import LoginView, PasswordChangeView, PasswordChangeDoneView, PasswordResetView, \
+    PasswordResetDoneView, PasswordResetConfirmView, PasswordResetCompleteView
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import Http404, HttpResponseNotAllowed
 from django.urls import reverse, reverse_lazy
@@ -6,8 +7,10 @@ from django.db.models import Q, Avg, Count, Min, Max
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import ListView, DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.contrib.auth import get_user_model
 
-from .forms import GameForm, GameAuthenticationForm, GameUserCreationForm
+from .forms import GameForm, GameAuthenticationForm, GameUserCreationForm, GamePasswordChangeForm, \
+    GamePasswordResetForm, GameSetPasswordForm, GameUserUpdateForm
 from .models import Game, Feature
 
 def home(request):
@@ -259,4 +262,84 @@ class GameRegisterView(CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['page_title'] = 'Регистрация'
+        return context
+
+class GamePasswordChangeView(PasswordChangeView):
+    form_class = GamePasswordChangeForm
+    template_name = 'games/password_change.html'
+    success_url = reverse_lazy('games:change_password_done')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = 'Смена пароля'
+        return context
+
+class GamePasswordChangeDoneView(PasswordChangeDoneView):
+    template_name = 'games/password_change_done.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = 'Пароль изменен'
+        return context
+
+class GamePasswordResetView(PasswordResetView):
+    form_class = GamePasswordResetForm
+    template_name = 'games/password_reset.html'
+    email_template_name = 'games/password_reset_email.txt'
+    subject_template_name = 'games/password_reset_subject.txt'
+    success_url = reverse_lazy('games:password_reset_done')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = 'Восстановление пароля'
+        return context
+
+class GamePasswordResetDoneView(PasswordResetDoneView):
+    template_name = 'games/password_reset_done.html'
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = 'Сброс пароля выполнен'
+        return context
+
+class GamePasswordResetConfirmView(PasswordResetConfirmView):
+    form_class = GameSetPasswordForm
+    template_name = 'games/password_reset_confirm.html'
+    success_url = reverse_lazy('games:password_reset_complete')
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = 'Восстановление пароля'
+        return context
+
+class GamePasswordResetCompleteView(PasswordResetCompleteView):
+    template_name = 'games/password_reset_complete.html'
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = 'Пароль обновлен успешно!'
+        return context
+
+class GameProfileView(LoginRequiredMixin, DetailView):
+    model = get_user_model()
+    template_name = 'games/profile.html'
+    context_object_name = 'profile_user'
+
+    def get_object(self, queryset=None):
+        return self.request.user
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = 'Профиль GameVault'
+        return context
+
+class GameProfileUpdateView(LoginRequiredMixin, UpdateView):
+    model = get_user_model()
+    form_class = GameUserUpdateForm
+    template_name = 'games/profile_edit.html'
+    success_url = reverse_lazy('games:profile')
+
+    def get_object(self, queryset=None):
+        return self.request.user
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = 'Редактирование профиля GameVault'
         return context

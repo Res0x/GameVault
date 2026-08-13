@@ -1,0 +1,39 @@
+{% extends 'games/base.html' %}
+
+{% block title %}{{ page_title }}{% endblock %}
+
+{% block content %}
+
+    <header class="page-header">
+        <h1 class="page-title">{{ page_title }}</h1>
+        <p class="page-subtitle">
+            Данные вашего аккаунта.
+        </p>
+    </header>
+    <section class="profile-card">
+        <div class="profile-field">
+            <span class="profile-label">
+                Имя пользователя
+            </span>
+            <span class="profile-value">
+                {{ profile_user.username }}
+            </span>
+        </div>
+        <div class="profile-field">
+            <span class="profile-label">
+                Email
+            </span>
+            <span class="profile-value">
+                {{ profile_user.email }}
+            </span>
+        </div>
+        <div class="profile-actions">
+            <a href="{% url 'games:profile_edit' %}" class="button">
+                Редактировать профиль
+            </a>
+            <a href="{% url 'games:change_password' %}" class="button button-secondary">
+                Сменить пароль
+            </a>
+        </div>
+    </section>
+{% endblock %}
