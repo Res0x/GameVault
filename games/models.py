@@ -64,6 +64,12 @@ class Game(models.Model):
                 name='game_rating_between_1_and_10'
             )
         ]
+        permissions = [
+            (
+                'manage_all_games',
+                'Может управлять всеми играми'
+            ),
+        ]
 
     def __str__(self):
         return self.title

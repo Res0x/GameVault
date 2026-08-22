@@ -38,10 +38,18 @@
                     <a href="{% url 'games:game_list' %}" class="button">Вернуться к списку</a>
                     <a href="{% url 'games:games_by_year' release_year=game.release_year %}" class="button">Другие игры за {{ game.release_year }} год</a>
                     {% if perms.games.change_game %}
-                        <a href="{% url 'games:game_edit' game_slug=game.slug %}" class="button">Редактировать игру</a>
+                        {% if game.added_by == user or perms.games.manage_all_games %}
+                            <a href="{% url 'games:game_edit' game_slug=game.slug %}" class="button">
+                                Редактировать игру
+                            </a>
+                        {% endif %}
                     {% endif %}
                     {% if perms.games.delete_game %}
-                        <a href="{% url 'games:game_delete' game_slug=game.slug %}" class="button button-danger">Удалить игру</a>
+                        {% if game.added_by == user or perms.games.manage_all_games %}
+                            <a href="{% url 'games:game_delete' game_slug=game.slug %}" class="button button-danger">
+                                Удалить игру
+                            </a>
+                        {% endif %}
                     {% endif %}
                 </div>
             </div>

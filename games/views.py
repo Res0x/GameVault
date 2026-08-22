@@ -202,6 +202,15 @@ class GameUpdateView(PermissionRequiredMixin, UpdateView):
             kwargs={'game_slug': self.object.slug},
         )
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+
+        if self.request.user.has_perm('games.manage_all_games'):
+            return queryset
+
+        return queryset.filter(
+            added_by=self.request.user
+        )
 
 class GameDeleteView(PermissionRequiredMixin, DeleteView):
     model = Game
@@ -215,6 +224,15 @@ class GameDeleteView(PermissionRequiredMixin, DeleteView):
         context['page_title'] = f'Удаление игры {self.object.title}'
         return context
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+
+        if self.request.user.has_perm('games.manage_all_games'):
+            return queryset
+
+        return queryset.filter(
+            added_by=self.request.user
+        )
 
 def games_by_year(request, release_year):
     games = Game.objects.all()

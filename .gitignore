@@ -1,0 +1,40 @@
+# Virtual environments
+.venv/
+venv/
+
+# Python
+__pycache__/
+*.py[cod]
+
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# Databases
+db.sqlite3
+*.sqlite3
+
+# IDE
+.idea/
+.vscode/
+
+# Django generated files
+staticfiles/
+media/
+
+# Tests and coverage
+.coverage
+htmlcov/
+.pytest_cache/
+
+# Linters and type checking
+.mypy_cache/
+.ruff_cache/
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
