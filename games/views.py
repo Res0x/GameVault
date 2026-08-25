@@ -100,6 +100,14 @@ class GameDetailView(DetailView):
     slug_url_kwarg = 'game_slug'
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['library_entry'] = None
+
+        if self.request.user.is_authenticated:
+            context['library_entry'] = (
+                self.object.library_entries
+                .filter(user=self.request.user)
+                .first()
+            )
         context['page_title'] = self.object.title
         context['recommendations'] = Game.objects.exclude(pk=self.object.pk)[:2]
         return context

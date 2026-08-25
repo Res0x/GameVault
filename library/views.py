@@ -1,7 +1,12 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView
 from django.db.models import Q
+from django.views.decorators.http import require_POST
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import get_object_or_404, redirect
+from django.contrib import messages
 
+from games.models import Game
 from library.models import LibraryEntry
 
 
@@ -52,3 +57,20 @@ class LibraryEntryListView(LoginRequiredMixin, ListView):
         context['query_string'] = request_copy
 
         return context
+
+@login_required
+@require_POST
+def library_entry_add(request, game_slug):
+    game = get_object_or_404(Game, slug=game_slug)
+
+    entry, created = LibraryEntry.objects.get_or_create(
+        user=request.user,
+        game=game,
+    )
+
+    if created:
+        messages.success(request, 'Игра успешно добавлена в библиотеку!')
+    else:
+        messages.info(request, 'Игра уже есть в вашей библиотеке!')
+
+    return redirect('games:game_detail',game_slug=game.slug)

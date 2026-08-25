@@ -9,4 +9,7 @@ urlpatterns = [
          views.LibraryEntryListView.as_view(),
          name='library_list'
          ),
+    path('add/<slug:game_slug>',
+         views.library_entry_add,
+         name='library_entry_add')
 ]
