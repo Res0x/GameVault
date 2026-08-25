@@ -18,6 +18,7 @@
                     {% if perms.games.add_game %}
                         <a href="{% url 'games:game_create' %}">Добавить игру</a>
                     {% endif %}
+                    <a href="{% url 'library:library_list' %}">Моя библиотека</a>
                     <a href="{% url 'games:profile' %}">Мой профиль</a>
                     <form method="POST" class="nav-auth-form" action="{% url 'games:logout' %}">
                         {% csrf_token %}

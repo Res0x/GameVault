@@ -1,0 +1,165 @@
+{% extends "games/base.html" %}
+{% load static %}
+
+{% block title %}{{ page_title }}{% endblock %}
+
+{% block content %}
+    <div class="page-header">
+        <h1 class="page-title">{{ page_title }}</h1>
+    </div>
+    <section class="section search-section">
+        <h2 class="section-title">Поиск по библиотеке</h2>
+        <form method="get"
+              action="{% url 'library:library_list' %}"
+              class="search-form">
+
+            <div class="search-field">
+                <label for="search" class="form-label">
+                    Название, жанр или разработчик
+                </label>
+
+                <input
+                    type="search"
+                    name="q"
+                    id="search"
+                    value="{{ q }}"
+                    placeholder="Например, Witcher, RPG или CD Projekt Red"
+                    class="form-control search-input"
+                >
+            </div>
+
+            <div class="search-status">
+                <label for="status" class="form-label">Выбор статуса</label>
+                <select name="status" id="status" class="form-control">
+                    <option value="">Все статусы</option>
+                        {% for value, label in status_choices %}
+                            <option value="{{ value }}"
+                                    {% if selected_status == value %}selected{% endif %}>
+                                {{ label }}
+                            </option>
+                        {% endfor %}
+                </select>
+            </div>
+
+            <div class="search-actions">
+                <button class="button" type="submit">
+                    Найти
+                </button>
+
+                {% if q or selected_status %}
+                    <a href="{% url 'library:library_list' %}" class="search-reset">
+                        Сбросить
+                    </a>
+                {% endif %}
+            </div>
+        </form>
+
+        <p class="search-results">
+            Найдено записей: {{ entries_count }}
+        </p>
+    </section>
+    <div class="games-list">
+        {% for entry in entries %}
+            <article class="game-card library-card{% if entry.is_favourite %} library-card--favourite{% endif %}">
+                <figure class="game-figure">
+                    <a href="{% url 'games:game_detail' game_slug=entry.game.slug %}" class="game-cover-link">
+                        <div class="game-cover-wrapper">
+                            <img class="game-cover" src="{% static entry.game.cover %}" alt="Обложка игры {{ entry.game.title }}">
+                            <span class="game-status-badge game-status-badge--{{ entry.status }}">
+                                {{ entry.get_status_display }}
+                            </span>
+                        </div>
+                    </a>
+                </figure>
+
+                <div class="library-card-header">
+                    <h2 class="game-title"><a href="{% url 'games:game_detail' game_slug=entry.game.slug %}">
+                        {{ entry.game.title }}
+                    </a></h2>
+                    {% if entry.is_favourite %}
+                        <span class="library-favourite-badge">★ Избранное</span>
+                    {% endif %}
+                </div>
+
+                <dl class="library-meta">
+                    <div class="library-meta-item">
+                        <dt class="library-meta-label">Жанр</dt>
+                        <dd class="library-meta-value">{{ entry.game.genre }}</dd>
+                    </div>
+
+                    <div class="library-meta-item">
+                        <dt class="library-meta-label">Платформа</dt>
+                        <dd class="library-meta-value">{{ entry.game.platform }}</dd>
+                    </div>
+
+                    <div class="library-meta-item">
+                        <dt class="library-meta-label">Разработчик</dt>
+                        <dd class="library-meta-value">{{ entry.game.developer }}</dd>
+                    </div>
+
+                    <div class="library-meta-item">
+                        <dt class="library-meta-label">Год выхода</dt>
+                        <dd class="library-meta-value">{{ entry.game.release_year }}</dd>
+                    </div>
+                </dl>
+                <div class="game-card-features">
+                    <p class="game-card-features-title">Особенности</p>
+                    <ul class="feature-list">
+                        {% for feature in entry.game.features.all %}
+                            <li class="feature-chip">{{ feature.name }}</li>
+                        {% empty %}
+                            <li class="game-card-features-empty">Не выбраны</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="library-personal">
+                    <div class="library-personal-item">
+                        <span class="library-personal-label">Моя оценка</span>
+                        {% if entry.rating %}
+                            <p class="library-rating">{{ entry.rating }} / 10</p>
+                        {% else %}
+                            <p class="library-rating library-rating--empty">Нет оценки</p>
+                        {% endif %}
+                    </div>
+                </div>
+                <footer class="library-card-footer">
+                    <p class="library-updated">Обновлено: {{ entry.updated_at|date:"d.m.Y H:i" }}</p>
+                    <a href="{% url 'games:game_detail' game_slug=entry.game.slug %}"
+                       class="button button-secondary library-details-link">
+                        Подробнее
+                    </a>
+                </footer>
+            </article>
+        {% empty %}
+            <section class="empty-state">
+                <span class="empty-state-icon">◇</span>
+                {% if q or selected_status %}
+                    <h2 class="empty-state-title">Ничего не найдено</h2>
+                    <p class="empty-state-text">Попробуй изменить поисковый запрос или выбрать другой статус.</p>
+                    <div class="empty-state-actions">
+                        <a href="{% url 'library:library_list' %}" class="button">Сбросить поиск</a>
+                    </div>
+                {% else %}
+                <h2 class="empty-state-title">Библиотека пока пуста</h2>
+                    <p class="empty-state-text">Ваша библиотека пока пуста, добавьте первую игру!</p>
+                    <div class="empty-state-actions">
+                        <a href="{% url 'games:game_list' %}" class="button">Перейти в каталог</a>
+                    </div>
+                {% endif %}
+            </section>
+        {% endfor %}
+    </div>
+    {% if is_paginated %}
+        <nav class="pagination">
+            {% if page_obj.has_previous %}
+                <a href="?page=1{{ query_string }}" class="button pagination-link">Первая</a>
+                <a href="?page={{ page_obj.previous_page_number }}{{ query_string }}" class="button pagination-link"><</a>
+            {% endif %}
+            <span class="pagination-current">Страница {{ page_obj.number }} из {{ paginator.num_pages }}</span>
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}{{ query_string }}" class="button pagination-link">></a>
+                <a href="?page={{ paginator.num_pages }}{{ query_string }}" class="button pagination-link">Последняя</a>
+            {% endif %}
+        </nav>
+    {% endif %}
+{% endblock %}
