@@ -34,6 +34,9 @@
     --color-danger-hover-border: #DC2626;
     --color-danger-active-bg: #B91C1C;
     --color-danger-active-border: #EF4444;
+    --color-danger-surface: rgba(127, 29, 29, 0.20);
+    --color-danger-surface-strong: rgba(127, 29, 29, 0.34);
+    --color-danger-shadow: rgba(185, 28, 28, 0.16);
 
     /* Системные сообщения */
     --color-message-success-text: #DCFCE7;
@@ -1000,6 +1003,16 @@ p {
     display: flex;
     flex-direction: column;
     height: 100%;
+    transition:
+        transform 180ms ease,
+        border-color 180ms ease,
+        box-shadow 180ms ease;
+}
+
+.game-card:hover {
+    transform: translateY(-3px);
+    border-color: var(--color-border-accent-soft);
+    box-shadow: 0 14px 32px var(--color-shadow-card);
 }
 
 .game-figure {
@@ -1036,11 +1049,6 @@ p {
     object-fit: cover;
     border: 1px solid var(--color-border-strong);
     border-radius: 12px;
-    transition: transform 240ms ease;
-}
-
-.game-cover-link:hover .game-cover {
-    transform: scale(1.04);
 }
 
 .game-status-badge {
@@ -1448,16 +1456,6 @@ p {
 .library-card {
     position: relative;
     overflow: hidden;
-    transition:
-        transform 180ms ease,
-        border-color 180ms ease,
-        box-shadow 180ms ease;
-}
-
-.library-card:hover {
-    transform: translateY(-3px);
-    border-color: var(--color-border-accent-soft);
-    box-shadow: 0 14px 32px var(--color-shadow-card);
 }
 
 
@@ -1466,6 +1464,13 @@ p {
 .library-card--favourite {
     border-color: var(--color-favourite);
     box-shadow: 0 0 0 1px var(--color-favourite-glow);
+}
+
+.library-card--favourite:hover {
+    border-color: var(--color-favourite);
+    box-shadow:
+        0 14px 32px var(--color-shadow-card),
+        0 0 0 1px var(--color-favourite-glow);
 }
 
 .library-card--favourite::before {
@@ -1733,10 +1738,9 @@ p {
 /* Подвал карточки */
 
 .library-card-footer {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 10px;
     margin-top: auto;
     padding-top: 16px;
     border-top: 1px solid var(--color-border-soft);
@@ -1750,9 +1754,98 @@ p {
 }
 
 .library-details-link {
-    flex-shrink: 0;
     padding: 8px 12px;
     font-size: 13px;
+}
+
+.library-card-actions {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+}
+
+.library-card-actions .button {
+    width: 100%;
+    padding: 9px 10px;
+    font-size: 13px;
+}
+
+
+/* =========================
+   Удаление из библиотеки
+   ========================= */
+
+.library-delete-page {
+    width: 100%;
+    max-width: 760px;
+    margin: 0 auto;
+}
+
+.library-delete-page__header {
+    margin-bottom: 18px;
+}
+
+.library-delete-card {
+    padding: 28px;
+    background-color: var(--color-bg-surface);
+    border: 1px solid var(--color-border-strong);
+    border-radius: 18px;
+    box-shadow: 0 16px 36px var(--color-shadow-card);
+}
+
+.library-delete-card__intro {
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--color-border-soft);
+}
+
+.library-delete-card__intro .section-title {
+    margin-bottom: 10px;
+}
+
+.library-delete-card__details {
+    margin-top: 20px;
+    padding: 18px;
+    background-color: var(--color-bg-card);
+    border: 1px solid var(--color-border-strong);
+    border-radius: 14px;
+}
+
+.library-delete-card__label {
+    margin: 0 0 8px;
+    color: var(--color-text-muted);
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.library-delete-card__removed {
+    margin: 0;
+    color: var(--color-text-primary);
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+.library-delete-card__note {
+    margin: 16px 0 0;
+    padding-top: 16px;
+    color: var(--color-text-secondary);
+    font-size: 14px;
+    line-height: 1.5;
+    border-top: 1px solid var(--color-border-soft);
+}
+
+.library-delete-form {
+    margin-top: 22px;
+}
+
+.library-delete-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.library-delete-actions .button {
+    min-width: 210px;
 }
 
 /* =========================
@@ -2067,6 +2160,58 @@ p {
     .library-edit-actions .button {
         width: 100%;
     }
+
+    .library-card-actions {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .library-delete-link {
+        grid-column: 1 / -1;
+    }
+
+    .delete-confirmation {
+        padding: 22px;
+        border-radius: 16px;
+    }
+
+    .delete-confirmation__header {
+        align-items: start;
+        gap: 12px;
+        padding-bottom: 18px;
+    }
+
+    .delete-confirmation__icon {
+        width: 46px;
+        height: 46px;
+        border-radius: 13px;
+        font-size: 24px;
+    }
+
+    .delete-confirmation__game {
+        margin-top: 18px;
+    }
+
+    .delete-data-list {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+
+    .delete-actions {
+        grid-template-columns: 1fr;
+    }
+
+        .library-delete-card {
+        padding: 20px;
+    }
+
+    .library-delete-actions {
+        flex-direction: column;
+    }
+
+    .library-delete-actions .button {
+        width: 100%;
+        min-width: 0;
+    }
 }
 
 
@@ -2079,7 +2224,7 @@ p {
     .button:active,
     .button.back-to-top:hover,
     .button.back-to-top:active,
-    .game-cover-link:hover .game-cover {
+    .game-card:hover {
         transform: none;
     }
 }
