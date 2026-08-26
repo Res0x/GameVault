@@ -71,10 +71,6 @@ urlpatterns = [
         name='game_list'
     ),
     path(
-        'ratings/',
-        views.ratings,
-        name='ratings'),
-    path(
         'games/add/',
         views.GameCreateView.as_view(),
         name='game_create'),

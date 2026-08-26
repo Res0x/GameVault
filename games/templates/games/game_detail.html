@@ -125,11 +125,13 @@
             <div class="games-list">
                 {% for recommendation in recommendations %}
                     <article class="game-card">
-                        <figure class="game-figure">
-                            <div class="game-cover-wrapper">
-                                <img class="game-cover" src="{% static recommendation.cover %}" alt="Обложка игры {{ recommendation.title }}">
-                            </div>
-                        </figure>
+                        <a href="{% url 'games:game_detail' game_slug=recommendation.slug %}" class="game-cover-link">
+                            <figure class="game-figure">
+                                <div class="game-cover-wrapper">
+                                    <img class="game-cover" src="{% static recommendation.cover %}" alt="Обложка игры {{ recommendation.title }}">
+                                </div>
+                            </figure>
+                        </a>
                         <h3 class="game-title">{{ recommendation.title }}</h3>
                         <ul class="game-info">
                             <li class="game-info-item">Жанр: {{ recommendation.genre }}</li>

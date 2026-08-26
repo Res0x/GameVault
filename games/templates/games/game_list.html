@@ -9,7 +9,7 @@
         <a href="{% url 'games:latest_game' %}" class="button">Самая новая игра</a>
     </div>
     <section class="section search-section">
-        <h2 class="section-title">Поиск по библиотеке</h2>
+        <h2 class="section-title">Поиск по каталогу</h2>
         <form method="get"
               action="{% url 'games:game_list' %}"
               class="search-form">
@@ -29,25 +29,12 @@
                 >
             </div>
 
-            <div class="search-status">
-                <label for="status" class="form-label">Выбор статуса</label>
-                <select name="status" id="status" class="form-control">
-                    <option value="">Все статусы</option>
-                    <option value="completed"
-                            {% if selected_status == "completed" %}selected{% endif %}>Пройдено</option>
-                    <option value="playing"
-                            {% if selected_status == "playing" %}selected{% endif %}>Прохожу</option>
-                    <option value="planned"
-                            {% if selected_status == "planned" %}selected{% endif %}>Хочу пройти</option>
-                </select>
-            </div>
-
             <div class="search-actions">
                 <button class="button" type="submit">
                     Найти
                 </button>
 
-                {% if q or selected_status %}
+                {% if q %}
                     <a href="{% url 'games:game_list' %}" class="search-reset">
                         Сбросить
                     </a>
@@ -66,7 +53,6 @@
                     <a href="{% url 'games:game_detail' game_slug=game.slug %}" class="game-cover-link">
                         <div class="game-cover-wrapper">
                             <img class="game-cover" src="{% static game.cover %}" alt="Обложка игры {{ game.title }}">
-                            <span class="game-status-badge">{{ game.get_status_display }}</span>
                         </div>
                     </a>
                 </figure>
@@ -74,12 +60,6 @@
                 <ul class="game-info">
                     <li class="game-info-item">Жанр: {{ game.genre }}</li>
                     <li class="game-info-item">Платформа: {{ game.platform }}</li>
-
-                    {% if game.rating %}
-                        <li class="game-info-item">Рейтинг: {{ game.rating }}</li>
-                    {% else %}
-                        <li class="game-info-item">Без оценки</li>
-                    {% endif %}
                 </ul>
                 <div class="game-card-features">
                     <p class="game-card-features-title">Особенности</p>
@@ -95,15 +75,15 @@
         {% empty %}
             <section class="empty-state">
                 <span class="empty-state-icon">◇</span>
-                {% if q or selected_status %}
+                {% if q %}
                     <h2 class="empty-state-title">Ничего не найдено</h2>
-                    <p class="empty-state-text">Попробуй изменить поисковый запрос или выбрать другой статус.</p>
+                    <p class="empty-state-text">Попробуй изменить поисковый запрос.</p>
                     <div class="empty-state-actions">
                         <a href="{% url 'games:game_list' %}" class="button">Сбросить поиск</a>
                     </div>
                 {% else %}
-                <h2 class="empty-state-title">Библиотека пока пуста</h2>
-                    <p class="empty-state-text">Ваша библиотека пока пуста, добавьте первую игру!</p>
+                <h2 class="empty-state-title">Каталог пока пуст</h2>
+                    <p class="empty-state-text">Каталог пока пуст, добавьте первую игру!</p>
                     <div class="empty-state-actions">
                         <a href="{% url 'games:game_create' %}" class="button">Добавить игру</a>
                     </div>

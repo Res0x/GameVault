@@ -13,8 +13,8 @@
             <nav class="site-nav">
                 <a href="{% url 'games:home' %}">Главная</a>
                 <a href="{% url 'games:game_list' %}">Список игр</a>
-                <a href="{% url 'games:ratings' %}">Рейтинг</a>
                 {% if user.is_authenticated %}
+                    <a href="{% url 'library:ratings' %}">Рейтинг</a>
                     {% if perms.games.add_game %}
                         <a href="{% url 'games:game_create' %}">Добавить игру</a>
                     {% endif %}

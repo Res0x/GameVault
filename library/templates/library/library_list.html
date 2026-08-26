@@ -124,14 +124,19 @@
                 </div>
                 <footer class="library-card-footer">
                     <p class="library-updated">Обновлено: {{ entry.updated_at|date:"d.m.Y H:i" }}</p>
-                    <a href="{% url 'games:game_detail' game_slug=entry.game.slug %}"
-                       class="button button-secondary library-details-link">
-                        Подробнее
-                    </a>
-                    <a href="{% url 'library:library_entry_edit' pk=entry.pk %}"
-                       class="button button-secondary library-details-link">
-                        Редактировать
-                    </a>
+                    <div class="library-card-actions">
+                        <a href="{% url 'games:game_detail' game_slug=entry.game.slug %}"
+                           class="button button-secondary library-details-link">
+                            Подробнее
+                        </a>
+                        <a href="{% url 'library:library_entry_edit' pk=entry.pk %}"
+                           class="button button-secondary library-details-link">
+                            Редактировать
+                        </a>
+                        <a href="{% url 'library:library_entry_delete' pk=entry.pk %}" class="button button-danger library-delete-link">
+                            Удалить
+                        </a>
+                    </div>
                 </footer>
             </article>
         {% empty %}

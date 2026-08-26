@@ -23,8 +23,6 @@ class GameAdmin(admin.ModelAdmin):
         'platform',
         'developer',
         'release_year',
-        'rating',
-        'status',
         'added_by',
     )
 
@@ -37,7 +35,6 @@ class GameAdmin(admin.ModelAdmin):
     list_filter = (
         'platform',
         'release_year',
-        'status',
         'added_by',
     )
 

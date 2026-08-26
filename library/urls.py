@@ -9,7 +9,7 @@ urlpatterns = [
          views.LibraryEntryListView.as_view(),
          name='library_list'
          ),
-    path('add/<slug:game_slug/',
+    path('add/<slug:game_slug>/',
          views.library_entry_add,
          name='library_entry_add'
          ),
@@ -18,4 +18,13 @@ urlpatterns = [
         views.LibraryEntryUpdateView.as_view(),
         name='library_entry_edit',
     ),
+    path(
+        '<int:pk>/delete/',
+        views.LibraryEntryDeleteView.as_view(),
+        name='library_entry_delete',
+    ),
+    path(
+        'ratings/',
+        views.ratings,
+        name='ratings'),
 ]

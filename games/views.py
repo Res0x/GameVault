@@ -3,7 +3,7 @@ from django.contrib.auth.views import LoginView, PasswordChangeView, PasswordCha
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import Http404, HttpResponseNotAllowed
 from django.urls import reverse, reverse_lazy
-from django.db.models import Q, Avg, Count, Min, Max
+from django.db.models import Q
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import ListView, DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
@@ -12,17 +12,29 @@ from django.contrib.auth import get_user_model
 from .forms import GameForm, GameAuthenticationForm, GameUserCreationForm, GamePasswordChangeForm, \
     GamePasswordResetForm, GameSetPasswordForm, GameUserUpdateForm
 from .models import Game, Feature
+from library.models import LibraryEntry
 
 def home(request):
+
     games = Game.objects.all()
     total_games = games.count()
-    playing_games = games.filter(status=Game.Status.PLAYING).count()
-    completed_games = games.filter(status=Game.Status.COMPLETED).count()
-    planned_games = games.filter(status=Game.Status.PLANNED).count()
+    completed_games = None
+    planned_games = None
+    playing_games = None
+    featured_game = None
+    total_entries = None
 
-    featured_game = (games
+
+    if request.user.is_authenticated:
+        entries = LibraryEntry.objects.filter(user=request.user)
+        total_entries = entries.count()
+        entries = entries.select_related('game')
+        playing_games = entries.filter(status=LibraryEntry.Status.PLAYING).count()
+        completed_games = entries.filter(status=LibraryEntry.Status.COMPLETED).count()
+        planned_games = entries.filter(status=LibraryEntry.Status.PLANNED).count()
+        featured_game = (entries
                      .filter(rating__isnull=False)
-                     .order_by('-rating', '-release_year', 'title')
+                     .order_by('-rating', '-game__release_year', 'game__title')
                      .first())
 
     context = {
@@ -33,6 +45,7 @@ def home(request):
             'уже прошел или только планируешь пройти.'
         ),
         'total_games': total_games,
+        'total_entries': total_entries,
         'playing_games': playing_games,
         'completed_games': completed_games,
         'planned_games': planned_games,
@@ -52,10 +65,6 @@ class GameListView(ListView):
         games = super().get_queryset()
         games = games.prefetch_related('features')
         self.search_query = self.request.GET.get('q', '').strip()
-        self.status = self.request.GET.get('status', '').strip()
-
-        if self.status not in Game.Status.values:
-            self.status = ''
 
         if self.search_query:
             normalized_query = self.search_query.casefold()
@@ -72,8 +81,6 @@ class GameListView(ListView):
                 | Q(features__pk__in=matching_feature_ids)
             ).distinct()
 
-        if self.status:
-            games = games.filter(status=self.status)
         return games
 
     def get_context_data(self, **kwargs):
@@ -81,7 +88,6 @@ class GameListView(ListView):
         context['page_title'] = 'Список игр'
         context['games_count'] = context['paginator'].count
         context['q'] = self.search_query
-        context['selected_status'] = self.status
 
         request_copy = self.request.GET.copy()
         request_copy.pop('page', None)
@@ -111,58 +117,6 @@ class GameDetailView(DetailView):
         context['page_title'] = self.object.title
         context['recommendations'] = Game.objects.exclude(pk=self.object.pk)[:2]
         return context
-
-
-def ratings(request):
-    rated_base = Game.objects.filter(
-        rating__isnull=False,
-    )
-
-    rating_summary = rated_base.aggregate(
-        total_rated=Count('id'),
-        average_rating=Avg('rating'),
-        highest_rating=Max('rating'),
-        lowest_rating=Min('rating'),
-    )
-
-    rated_games = (
-        rated_base
-        .annotate(
-            features_count=Count(
-                'features',
-                distinct=True,
-            ),
-        )
-        .order_by(
-            '-rating',
-            '-release_year',
-            'title',
-        )
-    )
-
-    genre_stats = (
-        rated_base
-        .values('genre')
-        .annotate(
-            games_count=Count('id'),
-            average_rating=Avg('rating'),
-            highest_rating=Max('rating'),
-        )
-        .order_by(
-            '-average_rating',
-            'genre',
-        )
-    )
-
-    context = {
-        'page_title': 'Рейтинг игр',
-        'rated_games': rated_games,
-        'rating_summary': rating_summary,
-        'genre_stats': genre_stats,
-    }
-
-    return render(request, 'games/ratings.html', context)
-
 
 class GameCreateView(PermissionRequiredMixin, CreateView):
     model = Game

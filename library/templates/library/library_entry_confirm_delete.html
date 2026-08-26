@@ -1,0 +1,50 @@
+{% extends 'games/base.html' %}
+
+{% block title %}Удаление {{ object.game.title }}{% endblock %}
+
+{% block content %}
+    <div class="library-delete-page">
+        <header class="page-header library-delete-page__header">
+            <p class="page-subtitle">Моя библиотека</p>
+            <h1 class="page-title">Удаление записи</h1>
+        </header>
+
+        <section class="section library-delete-card">
+            <div class="library-delete-card__intro">
+                <h2 class="section-title">
+                    {{ object.game.title }}
+                </h2>
+                <p class="section-text">
+                    Вы уверены, что хотите удалить эту игру из своей библиотеки?
+                </p>
+            </div>
+
+            <div class="library-delete-card__details">
+                <p class="library-delete-card__label">Будут удалены</p>
+                <p class="library-delete-card__removed">
+                    Статус прохождения, личная оценка, даты, заметки
+                    и отметка «Избранное».
+                </p>
+
+                <p class="library-delete-card__note">
+                    Сама игра останется в общем каталоге GameVault.
+                </p>
+            </div>
+
+            <form method="post" class="library-delete-form">
+                {% csrf_token %}
+
+                <div class="library-delete-actions">
+                    <button type="submit" class="button button-danger">
+                        Удалить из библиотеки
+                    </button>
+
+                    <a href="{% url 'library:library_list' %}"
+                       class="button button-secondary">
+                        Отмена
+                    </a>
+                </div>
+            </form>
+        </section>
+    </div>
+{% endblock %}

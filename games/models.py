@@ -1,6 +1,4 @@
 from django.db import models
-from django.core.validators import MinValueValidator, MaxValueValidator
-from django.db.models import Q
 from django.conf import settings
 
 class Feature(models.Model):
@@ -16,12 +14,6 @@ class Feature(models.Model):
         return self.name
 
 class Game(models.Model):
-
-    class Status(models.TextChoices):
-        PLANNED = 'planned', 'Хочу пройти'
-        PLAYING = 'playing', 'Прохожу'
-        COMPLETED = 'completed', 'Пройдено'
-
     title = models.CharField(max_length=200)
     slug = models.SlugField(max_length=200, unique=True)
     release_year = models.PositiveIntegerField()
@@ -29,12 +21,6 @@ class Game(models.Model):
     genre = models.CharField(max_length=100, blank=True, default='')
     platform = models.CharField(max_length=100, blank=True, default='')
     developer = models.CharField(max_length=150, blank=True, default='')
-    rating = models.PositiveSmallIntegerField(blank=True, null=True,
-                                              validators=[
-                                                  MinValueValidator(1),
-                                                  MaxValueValidator(10)
-                                              ])
-    status = models.CharField(max_length=20, choices=Status.choices, default=Status.PLANNED)
     cover = models.CharField(max_length=255, blank=True, default='')
     subtitle = models.CharField(max_length=255, blank=True, default='')
     playtime = models.CharField(max_length=100, blank=True, default='')
@@ -55,15 +41,6 @@ class Game(models.Model):
         ordering = ['-release_year', 'title']
         verbose_name = 'Игра'
         verbose_name_plural = 'Игры'
-        constraints = [
-            models.CheckConstraint(
-                condition=(
-                    Q(rating__isnull=True) |
-                    (Q(rating__gte=1) & Q(rating__lte=10))
-                ),
-                name='game_rating_between_1_and_10'
-            )
-        ]
         permissions = [
             (
                 'manage_all_games',
