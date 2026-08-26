@@ -18,8 +18,6 @@ class GameForm(forms.ModelForm):
             'genre',
             'platform',
             'developer',
-            'rating',
-            'status',
             'cover',
             'subtitle',
             'playtime',
@@ -73,7 +71,6 @@ class GameForm(forms.ModelForm):
                 },
             ),
             'release_year': forms.NumberInput(),
-            'rating': forms.NumberInput(),
             'features': forms.CheckboxSelectMultiple(
                 attrs={
                     'class': 'choice-input',
@@ -87,8 +84,6 @@ class GameForm(forms.ModelForm):
             'genre': 'Жанр',
             'platform': 'Платформа',
             'developer': 'Разработчик',
-            'rating': 'Рейтинг',
-            'status': 'Статус',
             'cover': 'Путь к обложке',
             'subtitle': 'Подзаголовок',
             'playtime': 'Время прохождения',
@@ -114,19 +109,6 @@ class GameForm(forms.ModelForm):
         if release_year > max_year:
             raise ValidationError(f'Максимальный год выпуска {max_year}.')
         return release_year
-
-    def clean(self):
-        cleaned_data = super().clean()
-
-        status = cleaned_data.get('status')
-        rating = cleaned_data.get('rating')
-        if status == Game.Status.COMPLETED and rating in cleaned_data:
-            self.add_error('rating',
-                           'Для пройденной игры укажи рейтинг.')
-        elif status != Game.Status.COMPLETED and rating is not None:
-            self.add_error('rating',
-                           'Нельзя оценить игру, которая еще не пройдена.')
-        return cleaned_data
 
 class GameAuthenticationForm(AuthenticationForm):
     def __init__(self, *args, **kwargs):
@@ -167,10 +149,10 @@ class GameUserCreationForm(UserCreationForm):
         fields = UserCreationForm.Meta.fields + ('email',)
 
     def clean_email(self):
-        email = self.cleaned_data['email'].lower()
+        email = self.cleaned_data['email'].strip().lower()
         User = get_user_model()
         if User.objects.filter(email__iexact=email).exists():
-            raise ValidationError
+            raise ValidationError('Пользователь с таким email уже существует.')
         return email
 
 class GamePasswordChangeForm(PasswordChangeForm):
@@ -215,6 +197,7 @@ class GameSetPasswordForm(SetPasswordForm):
 class GameUserUpdateForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.fields['email'].required = True
 
         for field in self.fields.values():
             field.widget.attrs['class'] = 'form-control'
@@ -226,7 +209,7 @@ class GameUserUpdateForm(forms.ModelForm):
         email = self.cleaned_data['email'].strip().lower()
         User = get_user_model()
         if User.objects.filter(email__iexact=email).exclude(pk=self.instance.pk).exists():
-            raise ValidationError
+            raise ValidationError('Пользователь с таким email уже существует.')
         return email
 
     class Meta:
