@@ -574,12 +574,6 @@ p {
     margin-top: 14px;
 }
 
-.form-help {
-    font-size: 14px;
-    color: var(--color-text-muted);
-    line-height: 1.5;
-}
-
 /* =========================
    Профиль пользователя
    ========================= */
@@ -648,23 +642,6 @@ p {
     margin-top: 4px;
 }
 
-
-/* Второстепенная кнопка */
-
-.button-secondary {
-    --button-background: var(--color-bg-card);
-    --button-border-color: var(--color-border-strong);
-
-    color: var(--color-text-secondary);
-}
-
-.button-secondary:hover {
-    --button-background: var(--color-bg-card-section);
-    --button-border-color: var(--color-accent);
-
-    color: var(--color-text-primary);
-}
-
 /* =========================
    Формы
    ========================= */
@@ -672,7 +649,7 @@ p {
 .game-form {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 16px;
     max-width: 720px;
     margin: 24px auto 0 auto;
 }
@@ -680,7 +657,7 @@ p {
 .form-group {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 6px;
 }
 
 .form-label {
@@ -689,6 +666,13 @@ p {
     font-weight: 700;
     line-height: 1.4;
     color: var(--color-text-primary);
+}
+
+.form-help {
+    margin: 0;
+    color: var(--color-text-muted);
+    font-size: 14px;
+    line-height: 1.45;
 }
 
 .form-control {
@@ -721,9 +705,13 @@ p {
     color: var(--color-text-muted);
 }
 
+.form-control[type="date"] {
+    color-scheme: dark;
+}
+
 .form-fieldset {
     margin: 0;
-    padding: 16px;
+    padding: 14px 16px 16px;
     border: 1px solid var(--color-border-strong);
     border-radius: 12px;
     background-color: var(--color-bg-card);
@@ -734,7 +722,7 @@ p {
     font-weight: 700;
     line-height: 1.4;
     color: var(--color-text-primary);
-    padding: 0 8px;
+    padding: 0 6px;
 }
 
 .form-actions {
@@ -913,6 +901,20 @@ p {
     transform: translateY(0) scale(0.98);
 }
 
+/* Второстепенная кнопка */
+
+.button-secondary {
+    --button-background: var(--color-bg-card);
+    --button-border-color: var(--color-border-strong);
+    color: var(--color-text-secondary);
+}
+
+.button-secondary:hover {
+    --button-background: var(--color-bg-card-section);
+    --button-border-color: var(--color-accent);
+    color: var(--color-text-primary);
+}
+
 .button-danger {
     background-color: var(--color-danger-bg);
     border-color: var(--color-danger-border);
@@ -947,30 +949,34 @@ p {
 
 
 /* =========================
-   Ошибки
+   Ошибки форм
    ========================= */
 
 .form-errors {
-    border: 1px solid var(--color-accent);
-    background-color: var(--color-bg-card);
-    padding: 16px;
-    margin-bottom: 20px;
+    margin: 0;
+    padding: 14px;
+    color: var(--color-message-error-text);
+    background-color: var(--color-message-error-bg);
+    border: 1px solid var(--color-message-error-border);
     border-radius: 12px;
 }
 
 .form-errors-title {
+    margin: 0 0 6px;
     font-size: 18px;
     font-weight: 700;
-    color: var(--color-text-primary);
-    margin-bottom: 6px;
+    color: var(--color-message-error-text);
 }
 
 .field-error {
-    font-size: 14px;
-    line-height: 1.4;
-    color: var(--color-accent-bright);
-    margin-top: 6px;
-    margin-bottom: 0;
+    margin: 2px 0 0;
+    padding: 8px 10px;
+    color: var(--color-message-error-text);
+    background-color: var(--color-message-error-bg);
+    border-left: 3px solid var(--color-message-error-border);
+    border-radius: 8px;
+    font-size: 13px;
+    line-height: 1.35;
 }
 
 
@@ -1597,6 +1603,69 @@ p {
     color: var(--color-text-muted);
 }
 
+
+/* Форма редактирования записи */
+
+.library-edit-page .page-header {
+    margin-bottom: 20px;
+}
+
+.library-edit-card {
+    width: 100%;
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.library-edit-card .game-form {
+    gap: 16px;
+    max-width: none;
+    margin: 0;
+}
+
+.library-edit-card .form-help {
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+.library-edit-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+    align-items: start;
+}
+
+.library-edit-grid > .form-group {
+    min-width: 0;
+    align-self: start;
+}
+
+.library-edit-favourite {
+    margin-bottom: 16px;
+    padding: 12px 14px;
+    background-color: var(--color-bg-card-section);
+    border: 1px solid var(--color-border-strong);
+    border-radius: 12px;
+}
+
+.library-edit-favourite .form-label {
+    margin: 0;
+    cursor: pointer;
+}
+
+.library-edit-notes textarea {
+    height: 120px;
+    min-height: 120px;
+    resize: vertical;
+}
+
+.library-edit-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
 /* Хочу пройти */
 
 .game-status-badge--planned {
@@ -1723,6 +1792,10 @@ p {
 
     .games-list {
         gap: 16px;
+    }
+
+    .library-edit-card {
+        padding: 18px;
     }
 }
 
@@ -1972,6 +2045,27 @@ p {
         width: 100%;
         text-align: center;
         order: -1;
+    }
+
+    .library-edit-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .library-edit-card {
+        padding: 14px;
+    }
+
+    .library-edit-card .game-form {
+        gap: 14px;
+    }
+
+    .library-edit-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .library-edit-actions .button {
+        width: 100%;
     }
 }
 

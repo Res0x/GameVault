@@ -128,6 +128,10 @@
                        class="button button-secondary library-details-link">
                         Подробнее
                     </a>
+                    <a href="{% url 'library:library_entry_edit' pk=entry.pk %}"
+                       class="button button-secondary library-details-link">
+                        Редактировать
+                    </a>
                 </footer>
             </article>
         {% empty %}

@@ -1,5 +1,6 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import ListView
+from django.urls import reverse_lazy
+from django.views.generic import ListView, UpdateView
 from django.db.models import Q
 from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
@@ -7,6 +8,7 @@ from django.shortcuts import get_object_or_404, redirect
 from django.contrib import messages
 
 from games.models import Game
+from library.forms import LibraryEntryForm
 from library.models import LibraryEntry
 
 
@@ -74,3 +76,27 @@ def library_entry_add(request, game_slug):
         messages.info(request, 'Игра уже есть в вашей библиотеке!')
 
     return redirect('games:game_detail',game_slug=game.slug)
+
+class LibraryEntryUpdateView(LoginRequiredMixin, UpdateView):
+    model = LibraryEntry
+    form_class = LibraryEntryForm
+    template_name = 'library/library_entry_form.html'
+    context_object_name = 'entry'
+    success_url = reverse_lazy('library:library_list')
+
+    def get_queryset(self):
+        entries = super().get_queryset()
+        entries = entries.filter(user=self.request.user)
+        return entries
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+
+        messages.success(self.request, 'Данные успешно обновлены!')
+
+        return response
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = 'Редактирование записи'
+        return context
