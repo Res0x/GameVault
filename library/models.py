@@ -59,7 +59,25 @@ class LibraryEntry(models.Model):
             models.UniqueConstraint(
                 fields=('user', 'game'),
                 name='unique_library_entry_per_user_game',
-            )
+            ),
+            models.CheckConstraint(
+                condition=models.Q(rating__isnull=True) | (models.Q(rating__lte=10) & models.Q(rating__gte=1)),
+                name='rating_between_1_and_10',
+            ),
+            models.CheckConstraint(
+                condition=models.Q(started_at__isnull=True) | models.Q(completed_at__isnull=True) | models.Q(started_at__lte=models.F('completed_at')),
+                name='game_started_earlier_than_completed_at',
+            ),
+            models.CheckConstraint(
+                condition=(models.Q(status='completed') & models.Q(completed_at__isnull=False)) |
+                          (~models.Q(status='completed') & models.Q(completed_at__isnull=True)),
+                name='completed_game_have_completed_date'
+            ),
+            models.CheckConstraint(
+                condition=models.Q(rating__isnull=True) |
+                          models.Q(status__in=('completed', 'dropped')),
+                name='rating_only_in_dropped_or_completed_game'
+            ),
         ]
 
     def __str__(self):
