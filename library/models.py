@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from django.conf import settings
@@ -26,6 +27,29 @@ class LibraryEntry(models.Model):
     completed_at = models.DateField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def clean(self):
+
+        super().clean()
+
+        errors = {}
+
+        if self.completed_at is None and self.status == self.Status.COMPLETED:
+            errors['completed_at'] = 'Для пройденной игры это поле обязательно'
+
+        if self.completed_at is not None and self.status != self.Status.COMPLETED:
+            errors['completed_at'] = 'Игру нужно пройти чтобы указать дату завершения'
+
+        if self.rating is not None and self.status not in (self.Status.COMPLETED, self.Status.DROPPED):
+            errors['rating'] = 'Оценка разрешена только для пройденной или заброшенной игры'
+
+        if self.started_at is not None and self.completed_at is not None:
+            if self.started_at > self.completed_at:
+                errors['completed_at'] = 'Дата завершения игры не может быть раньше даты начала прохождения'
+
+        if errors:
+            raise ValidationError(errors)
+
 
     class Meta:
         ordering = ('-updated_at',)
