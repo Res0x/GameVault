@@ -11,7 +11,7 @@ from django.contrib.auth import get_user_model
 
 from .forms import GameForm, GameAuthenticationForm, GameUserCreationForm, GamePasswordChangeForm, \
     GamePasswordResetForm, GameSetPasswordForm, GameUserUpdateForm
-from .models import Game, Feature
+from .models import Game
 from library.models import LibraryEntry
 
 def home(request):
@@ -67,18 +67,10 @@ class GameListView(ListView):
         self.search_query = self.request.GET.get('q', '').strip()
 
         if self.search_query:
-            normalized_query = self.search_query.casefold()
-
-            matching_feature_ids = [
-                feature.pk
-                for feature in Feature.objects.only('pk', 'name')
-                if normalized_query in feature.name.casefold()
-            ]
-
             games = games.filter(
                 Q(title__icontains=self.search_query)
                 | Q(genre__icontains=self.search_query)
-                | Q(features__pk__in=matching_feature_ids)
+                | Q(features__name__icontains=self.search_query)
             ).distinct()
 
         return games
