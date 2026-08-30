@@ -2,7 +2,7 @@
 {% block header %}{{ page_title }}{% endblock header %}
 {% block content %}
     <section class="section">
-        {% if not library_entries_count %}
+        {% if not has_user_data %}
 
                 <h2 class="section-title">{{ game.title }}</h2>
                 <p class="section-text">Вы действительно хотите удалить {{ game.title }}?</p>
@@ -13,7 +13,7 @@
                 </form>
         {% else %}
                 <h2 class="section-title">{{ game.title }}</h2>
-                <p class="section-text">Нельзя удалить данную игру так как она есть в библиотеках пользователей!</p>
+                <p class="section-text">Нельзя удалить данную игру так как с ней связаны пользовательские данные!</p>
                 <a class="button" href="{% url 'games:game_detail' game_slug=game.slug %}">Вернуться к игре</a>
         {% endif %}
     </section>

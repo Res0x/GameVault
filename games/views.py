@@ -2,7 +2,6 @@ from django.contrib.auth.views import LoginView, PasswordChangeView, PasswordCha
     PasswordResetDoneView, PasswordResetConfirmView, PasswordResetCompleteView
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import Http404, HttpResponseNotAllowed
-from django.template.context_processors import request
 from django.urls import reverse, reverse_lazy
 from django.db.models import Q, ProtectedError
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
@@ -177,7 +176,7 @@ class GameDeleteView(PermissionRequiredMixin, DeleteView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['page_title'] = f'Удаление игры {self.object.title}'
-        context['library_entries_count'] = self.object.library_entries.count()
+        context['has_user_data'] = bool(self.object.library_entries.count() + self.object.reviews.count())
         return context
 
     def get_queryset(self):
@@ -194,7 +193,7 @@ class GameDeleteView(PermissionRequiredMixin, DeleteView):
         try:
             return super().form_valid(form)
         except ProtectedError:
-            messages.error(self.request, 'Нельзя удалить игру, которая есть в библиотеке хотя бы у одного пользователя!')
+            messages.error(self.request, 'Нельзя удалить игру, с которой связаны пользовательские данные!')
             url = reverse('games:game_detail', kwargs={'game_slug': self.object.slug})
             return redirect(url)
 

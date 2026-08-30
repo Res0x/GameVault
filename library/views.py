@@ -38,6 +38,8 @@ class LibraryEntryListView(LoginRequiredMixin, UserEntriesMixin ,ListView):
         if self.status:
             entries = entries.filter(status=self.status)
 
+        entries = entries.order_by('-is_favourite', '-created_at')
+
         return entries
 
     def get_context_data(self, **kwargs):
