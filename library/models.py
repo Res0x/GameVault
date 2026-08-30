@@ -4,9 +4,23 @@ from django.db import models
 from django.conf import settings
 from django.db.models.deletion import PROTECT
 
+class LibraryEntryQuerySet(models.QuerySet):
+
+    def for_user(self, user):
+        return self.filter(user=user)
+
+    def rated(self):
+        return self.filter(rating__isnull=False)
+
+    def with_game(self):
+        return self.select_related('game')
+
+    def with_game_features(self):
+        return self.select_related('game').prefetch_related('game__features')
 
 class LibraryEntry(models.Model):
 
+    objects = LibraryEntryQuerySet.as_manager()
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='library_entries')
     game = models.ForeignKey('games.Game', on_delete=PROTECT, related_name='library_entries')
 

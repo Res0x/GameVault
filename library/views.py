@@ -20,8 +20,7 @@ class LibraryEntryListView(LoginRequiredMixin, UserEntriesMixin ,ListView):
     paginate_by = 9
 
     def get_queryset(self):
-        entries = super().get_queryset()
-        entries = entries.select_related('game')
+        entries = super().get_queryset().with_game_features()
         self.search_query = self.request.GET.get('q', '').strip()
         self.status = self.request.GET.get('status', '').strip()
 
@@ -38,8 +37,6 @@ class LibraryEntryListView(LoginRequiredMixin, UserEntriesMixin ,ListView):
 
         if self.status:
             entries = entries.filter(status=self.status)
-
-        entries = entries.prefetch_related('game__features')
 
         return entries
 
@@ -117,11 +114,7 @@ class LibraryEntryDeleteView(LoginRequiredMixin, UserEntriesMixin, DeleteView):
 
 @login_required
 def ratings(request):
-    rated_base = LibraryEntry.objects.filter(
-        user=request.user,
-    )
-    rated_base = rated_base.select_related('game')
-    rated_base = rated_base.filter(rating__isnull=False)
+    rated_base = LibraryEntry.objects.for_user(request.user).with_game().rated()
 
     rating_summary = rated_base.aggregate(
         total_rated=Count('id'),

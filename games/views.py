@@ -2,6 +2,7 @@ from django.contrib.auth.views import LoginView, PasswordChangeView, PasswordCha
     PasswordResetDoneView, PasswordResetConfirmView, PasswordResetCompleteView
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import Http404, HttpResponseNotAllowed
+from django.template.context_processors import request
 from django.urls import reverse, reverse_lazy
 from django.db.models import Q, ProtectedError
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
@@ -27,14 +28,13 @@ def home(request):
 
 
     if request.user.is_authenticated:
-        entries = LibraryEntry.objects.filter(user=request.user)
+        entries = LibraryEntry.objects.for_user(request.user).with_game()
         total_entries = entries.count()
-        entries = entries.select_related('game')
         playing_games = entries.filter(status=LibraryEntry.Status.PLAYING).count()
         completed_games = entries.filter(status=LibraryEntry.Status.COMPLETED).count()
         planned_games = entries.filter(status=LibraryEntry.Status.PLANNED).count()
         featured_game = (entries
-                     .filter(rating__isnull=False)
+                     .rated()
                      .order_by('-rating', '-game__release_year', 'game__title')
                      .first())
 
@@ -104,7 +104,7 @@ class GameDetailView(DetailView):
         if self.request.user.is_authenticated:
             context['library_entry'] = (
                 self.object.library_entries
-                .filter(user=self.request.user)
+                .for_user(self.request.user)
                 .first()
             )
         context['page_title'] = self.object.title
