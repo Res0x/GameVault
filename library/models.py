@@ -2,11 +2,13 @@ from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from django.conf import settings
+from django.db.models.deletion import PROTECT
+
 
 class LibraryEntry(models.Model):
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='library_entries')
-    game = models.ForeignKey('games.Game', on_delete=models.CASCADE, related_name='library_entries')
+    game = models.ForeignKey('games.Game', on_delete=PROTECT, related_name='library_entries')
 
     class Status(models.TextChoices):
         PLANNED = 'planned', 'Хочу пройти'

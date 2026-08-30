@@ -3,11 +3,12 @@ from django.contrib.auth.views import LoginView, PasswordChangeView, PasswordCha
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import Http404, HttpResponseNotAllowed
 from django.urls import reverse, reverse_lazy
-from django.db.models import Q
+from django.db.models import Q, ProtectedError
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import ListView, DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.auth import get_user_model
+from django.contrib import messages
 
 from .forms import GameForm, GameAuthenticationForm, GameUserCreationForm, GamePasswordChangeForm, \
     GamePasswordResetForm, GameSetPasswordForm, GameUserUpdateForm
@@ -176,6 +177,7 @@ class GameDeleteView(PermissionRequiredMixin, DeleteView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['page_title'] = f'Удаление игры {self.object.title}'
+        context['library_entries_count'] = self.object.library_entries.count()
         return context
 
     def get_queryset(self):
@@ -187,6 +189,15 @@ class GameDeleteView(PermissionRequiredMixin, DeleteView):
         return queryset.filter(
             added_by=self.request.user
         )
+
+    def form_valid(self, form):
+        try:
+            return super().form_valid(form)
+        except ProtectedError:
+            messages.error(self.request, 'Нельзя удалить игру, которая есть в библиотеке хотя бы у одного пользователя!')
+            url = reverse('games:game_detail', kwargs={'game_slug': self.object.slug})
+            return redirect(url)
+
 
 def games_by_year(request, release_year):
     games = Game.objects.all()
