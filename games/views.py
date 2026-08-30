@@ -176,6 +176,7 @@ class GameDeleteView(PermissionRequiredMixin, DeleteView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['page_title'] = f'Удаление игры {self.object.title}'
+        context['library_entries_count'] = self.object.library_entries.count()
         context['has_user_data'] = bool(self.object.library_entries.count() + self.object.reviews.count())
         return context
 

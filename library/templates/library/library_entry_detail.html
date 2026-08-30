@@ -1,0 +1,192 @@
+{% extends "games/base.html" %}
+{% load static %}
+
+{% block title %}{{ page_title }}{% endblock %}
+
+{% block content %}
+    <article class="library-entry-detail">
+        <header class="page-header library-entry-detail__header">
+            <h1 class="page-title">{{ page_title }}</h1>
+            <p class="library-entry-detail__subtitle">
+                Личная информация о прохождении игры
+            </p>
+        </header>
+
+        <section class="section library-entry-hero">
+            <figure class="library-entry-cover">
+                <div class="game-cover-wrapper">
+                    <img
+                        class="game-cover library-entry-cover__image"
+                        src="{% static entry.game.cover %}"
+                        alt="Обложка игры {{ entry.game.title }}"
+                    >
+                    <span class="game-status-badge game-status-badge--{{ entry.status }}">
+                        {{ entry.get_status_display }}
+                    </span>
+                </div>
+            </figure>
+
+            <div class="library-entry-game">
+                <div class="library-entry-title-row">
+                    <h2 class="section-title">Об игре</h2>
+                    {% if entry.is_favourite %}
+                        <span class="library-favourite-badge">★ Избранное</span>
+                    {% endif %}
+                </div>
+
+                {% if entry.game.description %}
+                    <p class="library-entry-description">
+                        {{ entry.game.description }}
+                    </p>
+                {% endif %}
+
+                <dl class="library-entry-game-meta">
+                    <div class="library-entry-game-meta__item">
+                        <dt class="library-entry-label">Жанр</dt>
+                        <dd class="library-entry-value">{{ entry.game.genre }}</dd>
+                    </div>
+
+                    <div class="library-entry-game-meta__item">
+                        <dt class="library-entry-label">Платформа</dt>
+                        <dd class="library-entry-value">{{ entry.game.platform }}</dd>
+                    </div>
+
+                    <div class="library-entry-game-meta__item">
+                        <dt class="library-entry-label">Разработчик</dt>
+                        <dd class="library-entry-value">{{ entry.game.developer }}</dd>
+                    </div>
+
+                    <div class="library-entry-game-meta__item">
+                        <dt class="library-entry-label">Год выпуска</dt>
+                        <dd class="library-entry-value">{{ entry.game.release_year }}</dd>
+                    </div>
+                </dl>
+
+                <div class="library-entry-features">
+                    <h3 class="library-entry-subtitle">Особенности</h3>
+                    <ul class="feature-list">
+                        {% for feature in entry.game.features.all %}
+                            <li class="feature-chip">{{ feature.name }}</li>
+                        {% empty %}
+                            <li class="empty-message">Особенности пока не выбраны.</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                <a
+                    href="{% url 'games:game_detail' game_slug=entry.game.slug %}"
+                    class="button button-secondary library-entry-game-link"
+                >
+                    Страница игры
+                </a>
+            </div>
+        </section>
+
+        <section class="section library-entry-personal">
+            <h2 class="section-title">Личная информация</h2>
+
+            <dl class="library-entry-personal-grid">
+                <div class="library-entry-personal-item">
+                    <dt class="library-entry-label">Статус</dt>
+                    <dd class="library-entry-value">
+                        {{ entry.get_status_display }}
+                    </dd>
+                </div>
+
+                <div class="library-entry-personal-item">
+                    <dt class="library-entry-label">Моя оценка</dt>
+                    {% if entry.rating %}
+                        <dd class="library-entry-value library-entry-value--accent">
+                            {{ entry.rating }} / 10
+                        </dd>
+                    {% else %}
+                        <dd class="library-entry-value library-entry-value--muted">
+                            Без оценки
+                        </dd>
+                    {% endif %}
+                </div>
+
+                <div class="library-entry-personal-item">
+                    <dt class="library-entry-label">Избранное</dt>
+                    <dd class="library-entry-value">
+                        {% if entry.is_favourite %}Да{% else %}Нет{% endif %}
+                    </dd>
+                </div>
+            </dl>
+
+            <div class="library-entry-notes">
+                <h3 class="library-entry-subtitle">Заметки</h3>
+                {% if entry.notes %}
+                    <p class="library-entry-notes__text">{{ entry.notes }}</p>
+                {% else %}
+                    <p class="library-entry-notes__text library-entry-notes__text--empty">
+                        Нет заметок
+                    </p>
+                {% endif %}
+            </div>
+
+            <dl class="library-entry-timestamps">
+                <div class="library-entry-timestamp">
+                    <dt class="library-entry-label">Дата начала</dt>
+                    {% if entry.started_at %}
+                        <dd class="library-entry-value">
+                            {{ entry.started_at|date:"d.m.Y" }}
+                        </dd>
+                    {% else %}
+                        <dd class="library-entry-value library-entry-value--muted">
+                            Не указана
+                        </dd>
+                    {% endif %}
+                </div>
+
+                <div class="library-entry-timestamp">
+                    <dt class="library-entry-label">Дата завершения</dt>
+                    {% if entry.completed_at %}
+                        <dd class="library-entry-value">
+                            {{ entry.completed_at|date:"d.m.Y" }}
+                        </dd>
+                    {% else %}
+                        <dd class="library-entry-value library-entry-value--muted">
+                            Не указана
+                        </dd>
+                    {% endif %}
+                </div>
+
+                <div class="library-entry-timestamp">
+                    <dt class="library-entry-label">Добавлено в библиотеку</dt>
+                    <dd class="library-entry-value">
+                        {{ entry.created_at|date:"d.m.Y H:i" }}
+                    </dd>
+                </div>
+
+                <div class="library-entry-timestamp">
+                    <dt class="library-entry-label">Последнее изменение</dt>
+                    <dd class="library-entry-value">
+                        {{ entry.updated_at|date:"d.m.Y H:i" }}
+                    </dd>
+                </div>
+            </dl>
+
+            <footer class="library-entry-actions">
+                <a
+                    href="{% url 'library:library_entry_edit' pk=entry.pk %}"
+                    class="button"
+                >
+                    Изменить запись
+                </a>
+                <a
+                    href="{% url 'library:library_list' %}"
+                    class="button button-secondary"
+                >
+                    Назад в библиотеку
+                </a>
+                <a
+                    href="{% url 'library:library_entry_delete' pk=entry.pk %}"
+                    class="button button-danger library-entry-actions__danger"
+                >
+                    Удалить из библиотеки
+                </a>
+            </footer>
+        </section>
+    </article>
+{% endblock %}

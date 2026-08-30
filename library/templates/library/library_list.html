@@ -62,7 +62,7 @@
         {% for entry in entries %}
             <article class="game-card library-card{% if entry.is_favourite %} library-card--favourite{% endif %}">
                 <figure class="game-figure">
-                    <a href="{% url 'games:game_detail' game_slug=entry.game.slug %}" class="game-cover-link">
+                    <a href="{% url 'library:library_entry_detail' pk=entry.pk %}" class="game-cover-link">
                         <div class="game-cover-wrapper">
                             <img class="game-cover" src="{% static entry.game.cover %}" alt="Обложка игры {{ entry.game.title }}">
                             <span class="game-status-badge game-status-badge--{{ entry.status }}">
@@ -73,7 +73,7 @@
                 </figure>
 
                 <div class="library-card-header">
-                    <h2 class="game-title"><a href="{% url 'games:game_detail' game_slug=entry.game.slug %}">
+                    <h2 class="game-title"><a href="{% url 'library:library_entry_detail' pk=entry.pk %}">
                         {{ entry.game.title }}
                     </a></h2>
                     {% if entry.is_favourite %}
@@ -123,18 +123,14 @@
                     </div>
                 </div>
                 <footer class="library-card-footer">
-                    <p class="library-updated">Обновлено: {{ entry.updated_at|date:"d.m.Y H:i" }}</p>
                     <div class="library-card-actions">
-                        <a href="{% url 'games:game_detail' game_slug=entry.game.slug %}"
+                        <a href="{% url 'library:library_entry_detail' pk=entry.pk %}"
                            class="button button-secondary library-details-link">
-                            Подробнее
+                            Открыть
                         </a>
                         <a href="{% url 'library:library_entry_edit' pk=entry.pk %}"
                            class="button button-secondary library-details-link">
-                            Редактировать
-                        </a>
-                        <a href="{% url 'library:library_entry_delete' pk=entry.pk %}" class="button button-danger library-delete-link">
-                            Удалить
+                            Изменить
                         </a>
                     </div>
                 </footer>

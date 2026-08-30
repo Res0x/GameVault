@@ -9,6 +9,10 @@ urlpatterns = [
          views.LibraryEntryListView.as_view(),
          name='library_list'
          ),
+    path('<int:pk>/',
+         views.LibraryEntryDetailView.as_view(),
+         name='library_entry_detail'
+         ),
     path('add/<slug:game_slug>/',
          views.library_entry_add,
          name='library_entry_add'

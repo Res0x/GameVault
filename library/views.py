@@ -1,6 +1,6 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.urls import reverse_lazy
-from django.views.generic import ListView, UpdateView, DeleteView
+from django.urls import reverse_lazy, reverse
+from django.views.generic import ListView, UpdateView, DeleteView, DetailView
 from django.db.models import Q, Count, Avg, Max, Min
 from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
@@ -13,7 +13,7 @@ from library.mixins import UserEntriesMixin
 from library.models import LibraryEntry
 
 
-class LibraryEntryListView(LoginRequiredMixin, UserEntriesMixin ,ListView):
+class LibraryEntryListView(LoginRequiredMixin, UserEntriesMixin, ListView):
     model = LibraryEntry
     template_name = 'library/library_list.html'
     context_object_name = 'entries'
@@ -38,7 +38,7 @@ class LibraryEntryListView(LoginRequiredMixin, UserEntriesMixin ,ListView):
         if self.status:
             entries = entries.filter(status=self.status)
 
-        entries = entries.order_by('-is_favourite', '-created_at')
+        entries = entries.order_by('-is_favourite', '-created_at', '-id')
 
         return entries
 
@@ -74,14 +74,15 @@ def library_entry_add(request, game_slug):
     else:
         messages.info(request, 'Игра уже есть в вашей библиотеке!')
 
-    return redirect('games:game_detail',game_slug=game.slug)
+    return redirect('library:library_entry_detail', pk=entry.pk)
 
 class LibraryEntryUpdateView(LoginRequiredMixin, UserEntriesMixin, UpdateView):
     model = LibraryEntry
     form_class = LibraryEntryForm
     template_name = 'library/library_entry_form.html'
     context_object_name = 'entry'
-    success_url = reverse_lazy('library:library_list')
+    def get_success_url(self):
+        return reverse('library:library_entry_detail', kwargs={'pk': self.object.pk})
 
     def form_valid(self, form):
         response = super().form_valid(form)
@@ -162,3 +163,18 @@ def ratings(request):
     }
 
     return render(request, 'library/ratings.html', context)
+
+class LibraryEntryDetailView(LoginRequiredMixin, UserEntriesMixin, DetailView):
+    model = LibraryEntry
+    template_name = 'library/library_entry_detail.html'
+    context_object_name = 'entry'
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        queryset = queryset.with_game_features()
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = f'{self.object.game.title}'
+        return context
