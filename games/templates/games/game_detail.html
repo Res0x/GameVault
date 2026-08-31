@@ -146,5 +146,99 @@
                 {% endfor %}
             </div>
         </section>
+        <section class="section reviews-section" id="reviews" aria-labelledby="reviews-title">
+            <header class="reviews-header">
+                <div>
+                    <h2 class="section-title" id="reviews-title">Отзывы</h2>
+                    <p class="reviews-description">
+                        Мнения игроков о {{ game.title }}
+                    </p>
+                </div>
+                <p class="reviews-count" aria-label="Количество отзывов">
+                    Отзывов: <strong>{{ reviews|length }}</strong>
+                </p>
+            </header>
+
+            <div class="reviews-action-panel">
+                {% if user.is_authenticated %}
+                    {% if user_review %}
+                        <div class="reviews-user-state">
+                            <p class="reviews-user-state__title">Ваш отзыв опубликован</p>
+                            <p class="reviews-user-state__text">
+                                Для одной игры можно оставить один отзыв.
+                            </p>
+                        </div>
+                    {% else %}
+                        <div class="reviews-user-state">
+                            <p class="reviews-user-state__title">Уже играли?</p>
+                            <p class="reviews-user-state__text">
+                                Поделитесь впечатлениями с другими пользователями.
+                            </p>
+                        </div>
+                        <a href="{% url 'reviews:review_create' game_slug=game.slug %}" class="button">
+                            Написать отзыв
+                        </a>
+                    {% endif %}
+                {% else %}
+                    <div class="reviews-user-state">
+                        <p class="reviews-user-state__title">Хотите оставить отзыв?</p>
+                        <p class="reviews-user-state__text">
+                            Войдите в аккаунт, чтобы поделиться своим мнением.
+                        </p>
+                    </div>
+                    <a href="{% url 'games:login' %}?next={{ request.get_full_path|urlencode }}" class="button">
+                        Войти
+                    </a>
+                {% endif %}
+            </div>
+
+            <div class="reviews-list">
+                {% for review in reviews %}
+                    <article class="review-card">
+                        <header class="review-card__header">
+                            <div class="review-author">
+                                <span class="review-author__avatar" aria-hidden="true">
+                                    {{ review.author.username|first|upper }}
+                                </span>
+                                <div class="review-author__info">
+                                    <p class="review-author__name">{{ review.author }}</p>
+                                    <time class="review-card__date" datetime="{{ review.created_at|date:'c' }}">
+                                        {{ review.created_at|date:"d.m.Y в H:i" }}
+                                    </time>
+                                </div>
+                            </div>
+
+                            {% if review.contains_spoilers %}
+                                <span class="review-card__spoiler-label">Есть спойлеры</span>
+                            {% endif %}
+                        </header>
+
+                        {% if review.contains_spoilers %}
+                            <details class="review-spoiler">
+                                <summary class="review-spoiler__summary">
+                                    Показать отзыв со спойлерами
+                                </summary>
+                                <div class="review-card__content review-spoiler__content">
+                                    <h3 class="review-card__title">{{ review.title }}</h3>
+                                    <p class="review-card__body">{{ review.body|linebreaksbr }}</p>
+                                </div>
+                            </details>
+                        {% else %}
+                            <div class="review-card__content">
+                                <h3 class="review-card__title">{{ review.title }}</h3>
+                                <p class="review-card__body">{{ review.body|linebreaksbr }}</p>
+                            </div>
+                        {% endif %}
+                    </article>
+                {% empty %}
+                    <div class="reviews-empty">
+                        <p class="reviews-empty__title">Отзывов пока нет</p>
+                        <p class="reviews-empty__text">
+                            Станьте первым, кто поделится впечатлениями об этой игре.
+                        </p>
+                    </div>
+                {% endfor %}
+            </div>
+        </section>
     </article>
 {% endblock %}

@@ -108,6 +108,10 @@ class GameDetailView(DetailView):
             )
         context['page_title'] = self.object.title
         context['recommendations'] = Game.objects.exclude(pk=self.object.pk)[:2]
+        context['reviews'] = self.object.reviews.select_related('author')
+        context['user_review'] = None
+        if self.request.user.is_authenticated:
+            context['user_review'] = self.object.reviews.filter(author=self.request.user).first()
         return context
 
 class GameCreateView(PermissionRequiredMixin, CreateView):

@@ -1,0 +1,86 @@
+{% extends 'games/base.html' %}
+
+{% block title %}{{ page_title }}{% endblock %}
+
+{% block content %}
+    <article class="review-form-page">
+        <header class="page-header review-form-header">
+            <h1 class="page-title">Новый отзыв</h1>
+            <p class="page-subtitle">
+                Поделитесь впечатлениями об игре
+                <a class="review-form-game-link" href="{% url 'games:game_detail' game_slug=game.slug %}">
+                    {{ game.title }}
+                </a>
+            </p>
+        </header>
+
+        <section class="section review-form-card" aria-labelledby="review-form-title">
+            <div class="review-form-intro">
+                <h2 class="section-title" id="review-form-title">Создание отзыва</h2>
+                <p class="review-form-intro__text">
+                    Отзыв будет виден всем посетителям. Спокойно расскажите, что вам понравилось
+                    или не понравилось, и отметьте наличие спойлеров.
+                </p>
+            </div>
+
+            <form method="post" class="game-form review-form">
+                {% csrf_token %}
+
+                {% if form.non_field_errors %}
+                    <div class="form-errors">
+                        <p class="form-errors-title">Не удалось опубликовать отзыв</p>
+                        {% for error in form.non_field_errors %}
+                            <p class="field-error">{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                <div class="review-form-fields">
+                    <div class="form-group">
+                        <label for="{{ form.title.id_for_label }}" class="form-label">
+                            {{ form.title.label }}
+                        </label>
+                        {{ form.title }}
+                        <p class="form-help">Кратко сформулируйте главную мысль отзыва.</p>
+                        {% for error in form.title.errors %}
+                            <p class="field-error">{{ error }}</p>
+                        {% endfor %}
+                    </div>
+
+                    <div class="form-group review-form-body">
+                        <label for="{{ form.body.id_for_label }}" class="form-label">
+                            {{ form.body.label }}
+                        </label>
+                        {{ form.body }}
+                        <p class="form-help">Расскажите о впечатлениях от игры без оскорблений и лишней информации.</p>
+                        {% for error in form.body.errors %}
+                            <p class="field-error">{{ error }}</p>
+                        {% endfor %}
+                    </div>
+
+                    <div class="review-form-spoiler">
+                        {{ form.contains_spoilers }}
+                        <div>
+                            <label for="{{ form.contains_spoilers.id_for_label }}" class="review-form-spoiler__label">
+                                В отзыве есть спойлеры
+                            </label>
+                            <p class="review-form-spoiler__help">
+                                Текст будет скрыт, пока читатель сам не решит его открыть.
+                            </p>
+                        </div>
+                        {% for error in form.contains_spoilers.errors %}
+                            <p class="field-error review-form-spoiler__error">{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="form-actions review-form-actions">
+                    <button type="submit" class="button">Опубликовать отзыв</button>
+                    <a href="{% url 'games:game_detail' game_slug=game.slug %}#reviews" class="button button-secondary">
+                        Отмена
+                    </a>
+                </div>
+            </form>
+        </section>
+    </article>
+{% endblock %}
