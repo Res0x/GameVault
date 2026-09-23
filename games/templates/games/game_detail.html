@@ -100,7 +100,7 @@
                 </section>
             </div>
         </section>
-            <section class="section">
+        <section class="section">
             <h2 class="section-title">Почему стоит сыграть</h2>
             <ul class="game-highlights">
                 {% for highlight in game.highlights.all %}
@@ -165,8 +165,12 @@
                         <div class="reviews-user-state">
                             <p class="reviews-user-state__title">Ваш отзыв опубликован</p>
                             <p class="reviews-user-state__text">
-                                Для одной игры можно оставить один отзыв.
+                                Вы можете изменить текст или удалить отзыв.
                             </p>
+                        </div>
+                        <div class="reviews-user-actions" role="group" aria-label="Действия с моим отзывом">
+                            <a href="{% url 'reviews:review_edit' pk=user_review.pk %}" class="button">Редактировать</a>
+                            <a href="{% url 'reviews:review_delete' pk=user_review.pk %}" class="button button-secondary">Удалить</a>
                         </div>
                     {% else %}
                         <div class="reviews-user-state">

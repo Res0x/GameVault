@@ -2515,7 +2515,8 @@ p {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 20px;
+    flex-wrap: wrap;
+    gap: 16px 24px;
     margin-top: 20px;
     padding: 16px 18px;
     background-color: var(--color-bg-card);
@@ -2524,7 +2525,37 @@ p {
 }
 
 .reviews-action-panel .button {
+    max-width: 100%;
     flex-shrink: 0;
+}
+
+.reviews-user-state {
+    min-width: 0;
+    flex: 1 1 260px;
+    overflow-wrap: anywhere;
+}
+
+.reviews-user-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 10px;
+    max-width: 100%;
+    margin-left: auto;
+}
+
+.reviews-user-actions .button,
+.review-form-actions .button,
+.review-delete-actions .button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    max-width: 100%;
+    font-family: inherit;
+    white-space: normal;
+    overflow-wrap: anywhere;
 }
 
 .reviews-user-state__title {
@@ -2733,6 +2764,11 @@ p {
     margin-bottom: 20px;
 }
 
+.review-form-header .page-title,
+.review-delete-header .page-title {
+    overflow-wrap: anywhere;
+}
+
 .review-form-game-link {
     color: var(--color-text-primary);
     font-weight: 700;
@@ -2836,11 +2872,99 @@ p {
 
 
 /* =========================
+   Подтверждение удаления отзыва
+   ========================= */
+
+.review-delete-page {
+    width: 100%;
+    max-width: 680px;
+    margin: 0 auto;
+}
+
+.review-delete-header {
+    margin-bottom: 24px;
+}
+
+.review-delete-header .page-title {
+    font-size: clamp(28px, 4vw, 36px);
+    line-height: 1.2;
+}
+
+.review-delete-card {
+    margin-bottom: 0;
+    padding: 28px;
+    font-size: 16px;
+}
+
+.review-delete-target {
+    min-width: 0;
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--color-border-soft);
+}
+
+.review-delete-game {
+    margin: 0;
+    color: var(--color-text-secondary);
+    font-size: 14px;
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+}
+
+.review-delete-game strong {
+    color: var(--color-text-secondary);
+    font-weight: 600;
+}
+
+.review-delete-title {
+    margin: 8px 0 0;
+    color: var(--color-text-primary);
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 1.4;
+    overflow-wrap: anywhere;
+}
+
+.review-delete-description {
+    margin: 0;
+    color: var(--color-text-primary);
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+.review-delete-note {
+    margin: 10px 0 0;
+    color: var(--color-text-secondary);
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.review-delete-form {
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid var(--color-border-soft);
+}
+
+.review-delete-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.review-delete-actions .button {
+    min-width: 150px;
+}
+
+
+/* =========================
    Адаптив отзывов
    ========================= */
 
 @media (max-width: 768px) {
-    .review-form-card {
+    .review-form-card,
+    .review-delete-card {
         padding: 22px;
     }
 }
@@ -2865,6 +2989,17 @@ p {
         width: 100%;
     }
 
+    .reviews-user-state {
+        flex: 0 1 auto;
+    }
+
+    .reviews-user-actions {
+        width: 100%;
+        margin-left: 0;
+        align-items: stretch;
+        flex-direction: column;
+    }
+
     .review-card {
         padding: 16px;
     }
@@ -2877,8 +3012,23 @@ p {
         align-self: flex-start;
     }
 
-    .review-form-card {
+    .review-form-card,
+    .review-delete-card {
         padding: 18px;
+    }
+
+    .review-delete-title {
+        font-size: 20px;
+    }
+
+    .review-delete-actions {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .review-delete-actions .button {
+        width: 100%;
+        min-width: 0;
     }
 
     .review-form-intro {

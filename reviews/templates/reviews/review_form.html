@@ -5,7 +5,7 @@
 {% block content %}
     <article class="review-form-page">
         <header class="page-header review-form-header">
-            <h1 class="page-title">Новый отзыв</h1>
+            <h1 class="page-title">{{ page_title}}</h1>
             <p class="page-subtitle">
                 Поделитесь впечатлениями об игре
                 <a class="review-form-game-link" href="{% url 'games:game_detail' game_slug=game.slug %}">
@@ -16,7 +16,7 @@
 
         <section class="section review-form-card" aria-labelledby="review-form-title">
             <div class="review-form-intro">
-                <h2 class="section-title" id="review-form-title">Создание отзыва</h2>
+                <h2 class="section-title" id="review-form-title">{{ form_heading }}</h2>
                 <p class="review-form-intro__text">
                     Отзыв будет виден всем посетителям. Спокойно расскажите, что вам понравилось
                     или не понравилось, и отметьте наличие спойлеров.
@@ -28,7 +28,7 @@
 
                 {% if form.non_field_errors %}
                     <div class="form-errors">
-                        <p class="form-errors-title">Не удалось опубликовать отзыв</p>
+                        <p class="form-errors-title">Не удалось сохранить отзыв</p>
                         {% for error in form.non_field_errors %}
                             <p class="field-error">{{ error }}</p>
                         {% endfor %}
@@ -75,7 +75,7 @@
                 </div>
 
                 <div class="form-actions review-form-actions">
-                    <button type="submit" class="button">Опубликовать отзыв</button>
+                    <button type="submit" class="button">{{ submit_text }}</button>
                     <a href="{% url 'games:game_detail' game_slug=game.slug %}#reviews" class="button button-secondary">
                         Отмена
                     </a>

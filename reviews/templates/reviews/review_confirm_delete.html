@@ -1,0 +1,34 @@
+{% extends 'games/base.html' %}
+
+{% block title %}Удаление отзыва на {{ object.game.title }}{% endblock %}
+
+{% block content %}
+    <article class="review-delete-page">
+        <header class="page-header review-delete-header">
+            <h1 class="page-title">Удаление отзыва</h1>
+            <p class="page-subtitle">Проверьте отзыв перед удалением.</p>
+        </header>
+
+        <section class="section review-delete-card" aria-labelledby="review-delete-title">
+            <header class="review-delete-target">
+                <p class="review-delete-game">Отзыв на игру <strong>{{ object.game.title }}</strong></p>
+                <h2 class="review-delete-title" id="review-delete-title">{{ object.title }}</h2>
+            </header>
+
+            <p class="review-delete-description">
+                Отзыв исчезнет со страницы игры. Восстановить его после удаления не получится.
+            </p>
+            <p class="review-delete-note">
+                Игра и ваша запись в библиотеке сохранятся.
+            </p>
+
+            <form method="post" class="review-delete-form">
+                {% csrf_token %}
+                <div class="review-delete-actions">
+                    <a href="{% url 'games:game_detail' game_slug=object.game.slug %}#reviews" class="button button-secondary">Отмена</a>
+                    <button type="submit" class="button button-danger">Удалить отзыв</button>
+                </div>
+            </form>
+        </section>
+    </article>
+{% endblock %}
