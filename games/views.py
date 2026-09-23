@@ -3,13 +3,14 @@ from django.contrib.auth.views import LoginView, PasswordChangeView, PasswordCha
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import Http404, HttpResponseNotAllowed
 from django.urls import reverse, reverse_lazy
-from django.db.models import Q, ProtectedError
+from django.db.models import Q, ProtectedError, Sum, Count
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import ListView, DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.auth import get_user_model
 from django.contrib import messages
 
+from reviews.models import Review
 from .forms import GameForm, GameAuthenticationForm, GameUserCreationForm, GamePasswordChangeForm, \
     GamePasswordResetForm, GameSetPasswordForm, GameUserUpdateForm
 from .models import Game
@@ -315,6 +316,17 @@ class GameProfileView(LoginRequiredMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['page_title'] = 'Профиль GameVault'
+        library = LibraryEntry.objects.for_user(user=self.request.user)
+        context['library_stats'] = library.aggregate(
+            total=Count('pk'),
+            completed=Count('pk', filter=Q(status=LibraryEntry.Status.COMPLETED)),
+            favourites=Count('pk', filter=Q(is_favourite=True)),
+        )
+        context['recent_entries'] = library.with_game().order_by('-created_at', '-pk')[:3]
+        user_reviews = Review.objects.filter(author=self.request.user)
+        context['reviews_count'] = user_reviews.count()
+        context['recent_reviews'] = user_reviews.select_related('game').order_by('-created_at', '-pk')[:3]
+
         return context
 
 class GameProfileUpdateView(LoginRequiredMixin, UpdateView):

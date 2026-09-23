@@ -3,37 +3,110 @@
 {% block title %}{{ page_title }}{% endblock %}
 
 {% block content %}
+    <article class="dashboard">
+        <header class="page-header">
+            <h1 class="page-title">{{ page_title }}</h1>
+            <p class="page-subtitle">Игры, отзывы и данные вашего аккаунта.</p>
+        </header>
 
-    <header class="page-header">
-        <h1 class="page-title">{{ page_title }}</h1>
-        <p class="page-subtitle">
-            Данные вашего аккаунта.
-        </p>
-    </header>
-    <section class="profile-card">
-        <div class="profile-field">
-            <span class="profile-label">
-                Имя пользователя
-            </span>
-            <span class="profile-value">
-                {{ profile_user.username }}
-            </span>
+        <section class="section" aria-labelledby="dashboard-summary-title">
+            <h2 class="section-title" id="dashboard-summary-title">Моя активность</h2>
+            <dl class="dashboard-stats">
+                <div class="dashboard-stat">
+                    <dt>Игр в библиотеке</dt>
+                    <dd>{{ library_stats.total }}</dd>
+                </div>
+                <div class="dashboard-stat">
+                    <dt>Пройдено</dt>
+                    <dd>{{ library_stats.completed }}</dd>
+                </div>
+                <div class="dashboard-stat">
+                    <dt>В избранном</dt>
+                    <dd>{{ library_stats.favourites }}</dd>
+                </div>
+                <div class="dashboard-stat">
+                    <dt>Отзывов</dt>
+                    <dd>{{ reviews_count }}</dd>
+                </div>
+            </dl>
+        </section>
+
+        <div class="dashboard-columns">
+            <section class="section dashboard-panel" aria-labelledby="dashboard-library-title">
+                <header>
+                    <h2 class="section-title" id="dashboard-library-title">Последние игры</h2>
+                    <p class="dashboard-panel-description">Недавно добавленные в вашу библиотеку.</p>
+                </header>
+
+                <ul class="dashboard-list">
+                    {% for entry in recent_entries %}
+                    <li class="dashboard-item">
+                        <h3 class="dashboard-item-title">
+                            <a href="{% url 'library:library_entry_detail' pk=entry.pk %}">{{ entry.game.title }}</a>
+                        </h3>
+                        <p class="dashboard-item-meta">
+                            <span>{{ entry.get_status_display }}</span>
+                            <span>Добавлено {{ entry.created_at }}</span>
+                        </p>
+                    </li>
+                    {% empty %}
+                    <li class="dashboard-empty">
+                        <p class="dashboard-empty-title">В библиотеке пока нет игр</p>
+                        <p>Добавьте первую игру из каталога, чтобы отслеживать прохождение.</p>
+                        <a href="{% url 'games:game_list' %}" class="button button-secondary">Открыть каталог</a>
+                    </li>
+                    {% endfor %}
+                </ul>
+
+                <footer class="dashboard-panel-footer">
+                    <a href="{% url 'library:library_list' %}" class="button button-secondary">Моя библиотека</a>
+                </footer>
+            </section>
+
+            <section class="section dashboard-panel" aria-labelledby="dashboard-reviews-title">
+                <header>
+                    <h2 class="section-title" id="dashboard-reviews-title">Последние отзывы</h2>
+                    <p class="dashboard-panel-description">Ваши недавние публикации об играх.</p>
+                </header>
+
+                <ul class="dashboard-list">
+                    {% for review in recent_reviews %}
+                    <li class="dashboard-item">
+                        <p class="dashboard-item-caption">{{ review.game.title }}</p>
+                        <h3 class="dashboard-item-title">{{ review.title }}</h3>
+                        <p class="dashboard-item-meta">Опубликовано {{ review.created_at }}</p>
+                        <div class="dashboard-item-actions">
+                            <a href="{% url 'games:game_detail' game_slug=review.game.slug %}#reviews" class="button button-secondary">К отзывам игры</a>
+                            <a href="{% url 'reviews:review_edit' pk=review.pk %}" class="button button-secondary">Изменить</a>
+                        </div>
+                    </li>
+                    {% empty %}
+                    <li class="dashboard-empty">
+                        <p class="dashboard-empty-title">Вы ещё не оставляли отзывы</p>
+                        <p>Поделиться впечатлениями можно на странице любой игры.</p>
+                        <a href="{% url 'games:game_list' %}" class="button button-secondary">Выбрать игру</a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </section>
         </div>
-        <div class="profile-field">
-            <span class="profile-label">
-                Email
-            </span>
-            <span class="profile-value">
-                {{ profile_user.email }}
-            </span>
-        </div>
-        <div class="profile-actions">
-            <a href="{% url 'games:profile_edit' %}" class="button">
-                Редактировать профиль
-            </a>
-            <a href="{% url 'games:change_password' %}" class="button button-secondary">
-                Сменить пароль
-            </a>
-        </div>
-    </section>
+
+        <section class="section dashboard-account" aria-labelledby="dashboard-account-title">
+            <h2 class="section-title" id="dashboard-account-title">Данные аккаунта</h2>
+            <dl class="profile-info">
+                <div class="profile-field">
+                    <dt class="profile-label">Имя пользователя</dt>
+                    <dd class="profile-value">{{ profile_user.username }}</dd>
+                </div>
+                <div class="profile-field">
+                    <dt class="profile-label">Email</dt>
+                    <dd class="profile-value">{{ profile_user.email }}</dd>
+                </div>
+            </dl>
+            <div class="profile-actions">
+                <a href="{% url 'games:profile_edit' %}" class="button">Редактировать профиль</a>
+                <a href="{% url 'games:change_password' %}" class="button button-secondary">Сменить пароль</a>
+            </div>
+        </section>
+    </article>
 {% endblock %}
