@@ -1,5 +1,7 @@
 import uuid
+import logging
 
+logger = logging.getLogger(__name__)
 
 class RequestIdMiddleware:
     def __init__(self, get_response):
@@ -11,7 +13,7 @@ class RequestIdMiddleware:
         request.request_id = request_id
 
         response = self.get_response(request)
-
+        logger.info("Request id: %s Request method: %s Request path: %s Response status code: %s", request.request_id, request.method, request.path, response.status_code)
         response['X-Request-Id'] = request_id
 
         return response
