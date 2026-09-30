@@ -15,6 +15,7 @@ from .forms import GameForm, GameAuthenticationForm, GameUserCreationForm, GameP
     GamePasswordResetForm, GameSetPasswordForm, GameUserUpdateForm
 from .models import Game
 from library.models import LibraryEntry
+from .recommendations import recommendations
 
 def home(request):
 
@@ -108,7 +109,7 @@ class GameDetailView(DetailView):
                 .first()
             )
         context['page_title'] = self.object.title
-        context['recommendations'] = Game.objects.exclude(pk=self.object.pk)[:2]
+        context['recommendations'] = recommendations(self.object)
         context['reviews'] = self.object.reviews.select_related('author')
         context['user_review'] = None
         if self.request.user.is_authenticated:
