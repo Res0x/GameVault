@@ -8,3 +8,5 @@ urlpatterns = [
     path('', include('games.urls')),
     path('reviews/', include('reviews.urls')),
 ]
+
+handler404 = 'gamevault_project.errors.page_not_found'

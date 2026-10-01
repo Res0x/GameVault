@@ -1,0 +1,28 @@
+{% extends 'games/base.html' %}
+
+{% block title %}Страница не найдена — GameVault{% endblock %}
+
+{% block content %}
+<section class="error-page" aria-labelledby="error-page-title">
+    <p class="error-page__code">404</p>
+    <h1 id="error-page-title" class="error-page__title">
+        Страница не найдена
+    </h1>
+
+    <p class="error-page__text">
+        Проверьте адрес страницы. Возможно, ссылка устарела
+        или эта страница вам недоступна.
+    </p>
+
+    <p class="error-page__request-id">
+        ID запроса: <code>{{ request_id }}</code>
+    </p>
+
+    <div class="error-page__actions">
+        <a class="button" href="{% url 'games:home' %}">На главную</a>
+        <a class="button button-secondary" href="{% url 'games:game_list' %}">
+            Каталог игр
+        </a>
+    </div>
+</section>
+{% endblock %}
