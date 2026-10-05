@@ -3,55 +3,67 @@
 {% block title %}{{ page_title }}{% endblock %}
 
 {% block content %}
-  <div class="page-header">
+<div class="page-header">
     <h1 class="page-title">{{ page_title }}</h1>
-  </div>
-  <section class="section">
+</div>
+
+<section class="section">
     <h2 class="section-title">{{ form_heading }}</h2>
     <p class="section-text">{{ form_description }}</p>
-  <form method="post" class="game-form" novalidate>
-    {% csrf_token %}
-    {% if form.non_field_errors %}
-      <div class="form-errors">
-          <p class="form-errors-title">
-              Не удалось сохранить игру
-          </p>
-          {% for error in form.non_field_errors %}
-              <p class="field-error">{{ error }}</p>
-          {% endfor %}
-      </div>
-    {% endif %}
-    {% for field in form %}
-      <div class="form-group">
-          {% if field.name != 'features' %}
-            <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
-            {{ field }}
-            {% for error in field.errors %}
-                <p class="field-error">{{ error }}</p>
-            {% endfor %}
-          {% else %}
-            <fieldset class="form-fieldset">
-              <legend class="form-legend">{{ field.label }}</legend>
-              <div class="choice-list">
-                  {% for checkbox in field %}
-                      <div class="choice-item">
-                          {{ checkbox.tag }}
-                          <label for="{{ checkbox.id_for_label }}" class="choice-label">
-                              {{ checkbox.choice_label }}
-                          </label>
-                      </div>
-                  {% endfor %}
-              </div>
-              {% for error in field.errors %}
-                  <p class="field-error">{{ error }}</p>
-              {% endfor %}
-            </fieldset>
-          {% endif %}
+
+    <form method="post" enctype="multipart/form-data" class="game-form">
+        {% csrf_token %}
+
+        {% if form.non_field_errors %}
+            <div class="form-errors">
+                <p class="form-errors-title">Не удалось сохранить игру</p>
+                {% for error in form.non_field_errors %}
+                    <p class="field-error">{{ error }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        {% for field in form %}
+            {% if field.name == 'features' %}
+                <div class="form-group">
+                    <fieldset class="form-fieldset">
+                        <legend class="form-legend">{{ field.label }}</legend>
+                        <div class="choice-list">
+                            {% for checkbox in field %}
+                                <div class="choice-item">
+                                    {{ checkbox.tag }}
+                                    <label for="{{ checkbox.id_for_label }}" class="choice-label">{{ checkbox.choice_label }}</label>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        {% for error in field.errors %}
+                            <p class="field-error">{{ error }}</p>
+                        {% endfor %}
+                    </fieldset>
+                </div>
+            {% elif field.name == 'upload_cover' %}
+                <div class="form-group game-cover-field">
+                    <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                    <p class="form-help">Выберите изображение. При редактировании можно оставить прежнюю обложку, не выбирая файл.</p>
+                    <div class="game-cover-field__widget">{{ field }}</div>
+                    {% for error in field.errors %}
+                        <p class="field-error">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="form-group">
+                    <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                    {{ field }}
+                    {% for error in field.errors %}
+                        <p class="field-error">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endfor %}
+
+        <div class="form-actions">
+            <button type="submit" class="button">{{ submit_text }}</button>
         </div>
-    {% endfor %}
-    <div class="form-actions">
-      <button type="submit" class="button">{{ submit_text }}</button>
-    </div>
-  </form>
+    </form>
 </section>
 {% endblock %}
