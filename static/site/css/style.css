@@ -734,6 +734,91 @@ p {
     margin-top: 4px;
 }
 
+/* Загрузка обложки игры */
+
+.game-cover-field {
+    padding: 18px;
+    background-color: var(--color-bg-card);
+    border: 1px solid var(--color-border-strong);
+    border-radius: 12px;
+}
+
+.game-cover-field .form-help {
+    margin: 0 0 12px;
+}
+
+.game-cover-field__widget {
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--color-text-secondary);
+    overflow-wrap: anywhere;
+}
+
+.game-cover-field__widget a {
+    color: var(--color-accent-bright);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.game-cover-field__widget a:hover {
+    color: var(--color-text-primary);
+}
+
+.game-cover-field__widget input[type="checkbox"] {
+    display: inline-block;
+    vertical-align: middle;
+    width: 18px;
+    height: 18px;
+    min-height: 0;
+    margin: 8px 8px 8px 0;
+    padding: 0;
+    accent-color: var(--color-accent);
+    cursor: pointer;
+}
+
+.game-cover-field__widget label {
+    display: inline;
+    vertical-align: middle;
+    font-size: 14px;
+    color: var(--color-text-primary);
+    cursor: pointer;
+}
+
+.game-cover-field__widget input[type="file"] {
+    display: block;
+    width: 100%;
+    margin-top: 8px;
+    padding: 8px;
+    color: var(--color-text-secondary);
+    background-color: var(--color-bg-main);
+    border: 1px solid var(--color-border-strong);
+    border-radius: 10px;
+    font: inherit;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.game-cover-field__widget input[type="file"]:hover,
+.game-cover-field__widget input[type="file"]:focus-visible {
+    border-color: var(--color-accent);
+}
+
+.game-cover-field__widget input[type="file"]::file-selector-button {
+    margin-right: 12px;
+    padding: 9px 14px;
+    color: var(--color-white);
+    background-color: var(--color-accent);
+    border: 0;
+    border-radius: 8px;
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.game-cover-field__widget input[type="file"]::file-selector-button:hover {
+    background-color: var(--color-accent-hover);
+}
+
 /* Чекбоксы и радио */
 
 .choice-list {
@@ -1326,6 +1411,45 @@ p {
     border-radius: 999px;
 }
 
+
+/* Заглушка вместо отсутствующей обложки */
+.game-cover-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    padding: 20px;
+    border: 1px solid var(--color-border-strong);
+    border-radius: 12px;
+    background: linear-gradient(
+        140deg,
+        var(--color-bg-card-section),
+        var(--color-bg-card) 65%,
+        var(--color-bg-surface)
+    );
+    color: var(--color-text-secondary);
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.4;
+    text-align: center;
+}
+
+.game-cover-placeholder::before {
+    content: "";
+    width: 30px;
+    height: 30px;
+    border: 2px solid var(--color-accent-bright);
+    border-radius: 6px;
+    opacity: 0.75;
+    transform: rotate(45deg);
+}
+
+.game-detail-figure .game-cover-placeholder {
+    border-radius: 16px;
+}
 
 /* =========================
    Избранная игра
@@ -2046,426 +2170,6 @@ p {
     min-width: 210px;
 }
 
-/* =========================
-   Адаптив
-   ========================= */
-
-@media (max-width: 900px) {
-    .game-detail-hero {
-        grid-template-columns: 1fr;
-    }
-
-    .game-detail-figure {
-        max-width: 620px;
-    }
-
-    .library-entry-hero {
-        grid-template-columns: 1fr;
-    }
-
-    .library-entry-cover {
-        max-width: 620px;
-    }
-
-}
-
-@media (max-width: 768px) {
-    .container {
-        padding: 0 16px;
-    }
-
-    .site-main {
-        padding: 32px 0;
-    }
-
-    .site-nav {
-        gap: 16px;
-    }
-
-    .page-title {
-        font-size: 34px;
-    }
-
-    .section {
-        padding: 20px;
-    }
-
-    .games-list {
-        gap: 16px;
-    }
-
-    .library-edit-card {
-        padding: 18px;
-    }
-}
-
-@media (max-width: 520px) {
-    .container {
-        padding: 0 12px;
-    }
-
-    .profile-card {
-    padding: 20px;
-    }
-
-    .profile-field {
-        grid-template-columns: 1fr;
-        gap: 6px;
-        padding: 16px 0;
-    }
-
-    .profile-actions,
-    .profile-edit-actions {
-        flex-direction: column;
-        align-items: stretch;
-        width: 100%;
-    }
-
-    .profile-actions .button,
-    .profile-edit-actions .button {
-        width: 100%;
-        text-align: center;
-    }
-
-    .section-title::before {
-        width: 8px;
-        height: 8px;
-    }
-
-    .project-figure {
-        margin: 0 auto 16px auto;
-    }
-
-    .site-header {
-        padding: 12px 0;
-    }
-
-    .button.back-to-top {
-        right: 12px;
-        bottom: 12px;
-        width: 44px;
-        height: 44px;
-        padding: 0;
-        font-size: 22px;
-    }
-
-    .site-main {
-        padding: 24px 0;
-    }
-
-    .site-nav {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 12px;
-    }
-
-    .page-header {
-        margin-bottom: 24px;
-    }
-
-    .page-title {
-        font-size: 30px;
-    }
-
-    .page-title::after {
-        width: 40px;
-        height: 3px;
-        margin-top: 8px;
-    }
-
-    .page-subtitle {
-        font-size: 16px;
-    }
-
-    .section {
-        padding: 16px;
-    }
-
-    .game-form {
-        gap: 16px;
-        margin: 20px auto 0 auto;
-    }
-
-    .game-status-badge {
-        top: 10px;
-        right: 10px;
-        font-size: 13px;
-        padding: 5px 8px;
-    }
-
-    .game-status-badge::before {
-        width: 6px;
-        height: 6px;
-    }
-
-    .game-detail-actions {
-        grid-template-columns: 1fr;
-    }
-
-    .game-library-panel-header {
-        align-items: flex-start;
-        flex-direction: column;
-        gap: 10px;
-    }
-
-    .game-library-panel-actions,
-    .game-library-form,
-    .game-library-form .button {
-        width: 100%;
-    }
-
-    .form-control {
-        padding: 10px 12px;
-    }
-
-    .form-actions {
-        display: block;
-    }
-
-    .form-actions .button {
-        display: block;
-        width: 100%;
-        text-align: center;
-    }
-
-    .form-fieldset {
-        padding: 14px;
-    }
-
-    .choice-list {
-        gap: 10px;
-    }
-
-    .choice-item {
-        align-items: flex-start;
-    }
-
-    .choice-input {
-        margin: 3px 0 0 0;
-    }
-
-    .empty-state {
-        min-height: 220px;
-        padding: 32px 16px;
-    }
-
-    .empty-state-actions {
-        width: 100%;
-    }
-
-    .empty-state-actions .button,
-    .empty-state-actions .search-reset {
-        width: 100%;
-        text-align: center;
-    }
-
-    .stats {
-        flex-direction: column;
-        gap: 12px;
-    }
-
-    .stat-card {
-        flex: 1 1 auto;
-    }
-
-    .game-figure {
-        margin: 0 0 12px 0;
-    }
-
-    .games-list {
-        grid-template-columns: 1fr;
-    }
-
-    .game-card {
-        padding: 20px;
-    }
-
-    .game-info {
-        min-height: 0;
-    }
-
-    .featured-game {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 16px;
-    }
-
-    .featured-game-figure {
-        flex: 1 1 auto;
-    }
-
-    .featured-game-content {
-        flex: 1 1 auto;
-    }
-
-    .featured-game-title {
-        font-size: 22px;
-    }
-
-    .search-section {
-        margin-bottom: 24px;
-    }
-
-    .search-form {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 16px;
-    }
-
-    .search-field {
-        flex: 1 1 auto;
-        width: 100%;
-    }
-
-    .search-actions {
-        flex-direction: column;
-        width: 100%;
-    }
-
-    .search-actions .button,
-    .search-reset {
-        width: 100%;
-        text-align: center;
-    }
-
-    .search-results {
-        margin-top: 14px;
-    }
-
-    .search-status {
-        flex-basis: auto;
-        width: 100%;
-    }
-
-    .pagination {
-        gap: 6px;
-    }
-
-    .pagination-current {
-        width: 100%;
-        text-align: center;
-        order: -1;
-    }
-
-    .library-edit-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .library-edit-card {
-        padding: 14px;
-    }
-
-    .library-edit-card .game-form {
-        gap: 14px;
-    }
-
-    .library-edit-actions {
-        flex-direction: column;
-        align-items: stretch;
-    }
-
-    .library-edit-actions .button {
-        width: 100%;
-    }
-
-    .library-entry-game-meta,
-    .library-entry-personal-grid,
-    .library-entry-timestamps {
-        grid-template-columns: 1fr;
-    }
-
-    .library-entry-personal-item--wide {
-        grid-column: auto;
-    }
-
-    .library-entry-title-row {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    .library-entry-actions {
-        flex-direction: column;
-        align-items: stretch;
-    }
-
-    .library-entry-actions .button {
-        width: 100%;
-        min-width: 0;
-        text-align: center;
-    }
-
-    .library-entry-actions__danger {
-        margin-left: 0;
-    }
-
-    .library-card-actions {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .library-delete-link {
-        grid-column: 1 / -1;
-    }
-
-    .delete-confirmation {
-        padding: 22px;
-        border-radius: 16px;
-    }
-
-    .delete-confirmation__header {
-        align-items: start;
-        gap: 12px;
-        padding-bottom: 18px;
-    }
-
-    .delete-confirmation__icon {
-        width: 46px;
-        height: 46px;
-        border-radius: 13px;
-        font-size: 24px;
-    }
-
-    .delete-confirmation__game {
-        margin-top: 18px;
-    }
-
-    .delete-data-list {
-        grid-template-columns: 1fr;
-        gap: 8px;
-    }
-
-    .delete-actions {
-        grid-template-columns: 1fr;
-    }
-
-        .library-delete-card {
-        padding: 20px;
-    }
-
-    .library-delete-actions {
-        flex-direction: column;
-    }
-
-    .library-delete-actions .button {
-        width: 100%;
-        min-width: 0;
-    }
-}
-
-
-/* =========================
-   Уменьшение движения
-   ========================= */
-
-@media (prefers-reduced-motion: reduce) {
-    .button:hover,
-    .button:active,
-    .button.back-to-top:hover,
-    .button.back-to-top:active,
-    .game-card:hover {
-        transform: none;
-    }
-}
-
 
 /* =========================
    Отзывы
@@ -2870,110 +2574,6 @@ p {
     min-width: 180px;
 }
 
-/* Страница 404 */
-
-.error-page {
-    width: min(100%, 680px);
-    margin: 48px auto;
-    padding: 36px;
-    background-color: var(--color-bg-surface);
-    border: 1px solid var(--color-border-soft);
-    border-radius: 16px;
-}
-
-.error-page__code {
-    margin: 0 0 12px;
-    color: var(--color-accent-bright);
-    font-size: 18px;
-    font-weight: 700;
-}
-
-.error-page__title {
-    margin: 0 0 16px;
-    color: var(--color-text-primary);
-    font-size: clamp(28px, 5vw, 38px);
-    line-height: 1.2;
-}
-
-.error-page__text {
-    max-width: 540px;
-    margin: 0;
-    color: var(--color-text-secondary);
-    line-height: 1.6;
-}
-
-.error-page__request-id {
-    margin: 26px 0 0;
-    padding-top: 18px;
-    border-top: 1px solid var(--color-border-soft);
-    color: var(--color-text-muted);
-    overflow-wrap: anywhere;
-}
-
-.error-page__request-id code {
-    color: var(--color-text-secondary);
-}
-
-.error-page__actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-    margin-top: 26px;
-}
-
-@media (max-width: 520px) {
-    .error-page {
-        margin: 24px auto;
-        padding: 24px;
-    }
-
-    .error-page__actions {
-        flex-direction: column;
-    }
-
-    .error-page__actions .button {
-        width: 100%;
-    }
-}
-
-/* Заглушка вместо отсутствующей обложки */
-.game-cover-placeholder {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 14px;
-    width: 100%;
-    aspect-ratio: 16 / 9;
-    padding: 20px;
-    border: 1px solid var(--color-border-strong);
-    border-radius: 12px;
-    background: linear-gradient(
-        140deg,
-        var(--color-bg-card-section),
-        var(--color-bg-card) 65%,
-        var(--color-bg-surface)
-    );
-    color: var(--color-text-secondary);
-    font-size: 14px;
-    font-weight: 600;
-    line-height: 1.4;
-    text-align: center;
-}
-
-.game-cover-placeholder::before {
-    content: "";
-    width: 30px;
-    height: 30px;
-    border: 2px solid var(--color-accent-bright);
-    border-radius: 6px;
-    opacity: 0.75;
-    transform: rotate(45deg);
-}
-
-.game-detail-figure .game-cover-placeholder {
-    border-radius: 16px;
-}
 
 /* =========================
    Подтверждение удаления отзыва
@@ -3061,105 +2661,6 @@ p {
     min-width: 150px;
 }
 
-
-/* =========================
-   Адаптив отзывов
-   ========================= */
-
-@media (max-width: 768px) {
-    .review-form-card,
-    .review-delete-card {
-        padding: 22px;
-    }
-}
-
-@media (max-width: 520px) {
-    .reviews-header,
-    .reviews-action-panel,
-    .review-card__header {
-        align-items: stretch;
-        flex-direction: column;
-    }
-
-    .reviews-header {
-        gap: 14px;
-    }
-
-    .reviews-count {
-        align-self: flex-start;
-    }
-
-    .reviews-action-panel .button {
-        width: 100%;
-    }
-
-    .reviews-user-state {
-        flex: 0 1 auto;
-    }
-
-    .reviews-user-actions {
-        width: 100%;
-        margin-left: 0;
-        align-items: stretch;
-        flex-direction: column;
-    }
-
-    .review-card {
-        padding: 16px;
-    }
-
-    .review-card__header {
-        gap: 12px;
-    }
-
-    .review-card__spoiler-label {
-        align-self: flex-start;
-    }
-
-    .review-form-card,
-    .review-delete-card {
-        padding: 18px;
-    }
-
-    .review-delete-title {
-        font-size: 20px;
-    }
-
-    .review-delete-actions {
-        align-items: stretch;
-        flex-direction: column;
-    }
-
-    .review-delete-actions .button {
-        width: 100%;
-        min-width: 0;
-    }
-
-    .review-form-intro {
-        padding-bottom: 16px;
-    }
-
-    .review-form-card .review-form {
-        margin-top: 18px;
-    }
-
-    .review-form-actions {
-        align-items: stretch;
-        flex-direction: column;
-    }
-
-    .review-form-actions .button {
-        width: 100%;
-        min-width: 0;
-    }
-}
-
-@media (prefers-reduced-motion: reduce) {
-    .review-spoiler__summary,
-    .review-spoiler__summary::before {
-        transition: none;
-    }
-}
 
 /* =========================
    Личный кабинет
@@ -3339,6 +2840,88 @@ p {
     margin-top: 20px;
 }
 
+
+/* =========================
+   Страница 404
+   ========================= */
+
+.error-page {
+    width: min(100%, 680px);
+    margin: 48px auto;
+    padding: 36px;
+    background-color: var(--color-bg-surface);
+    border: 1px solid var(--color-border-soft);
+    border-radius: 16px;
+}
+
+.error-page__code {
+    margin: 0 0 12px;
+    color: var(--color-accent-bright);
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.error-page__title {
+    margin: 0 0 16px;
+    color: var(--color-text-primary);
+    font-size: clamp(28px, 5vw, 38px);
+    line-height: 1.2;
+}
+
+.error-page__text {
+    max-width: 540px;
+    margin: 0;
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+}
+
+.error-page__request-id {
+    margin: 26px 0 0;
+    padding-top: 18px;
+    border-top: 1px solid var(--color-border-soft);
+    color: var(--color-text-muted);
+    overflow-wrap: anywhere;
+}
+
+.error-page__request-id code {
+    color: var(--color-text-secondary);
+}
+
+.error-page__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 26px;
+}
+
+
+/* =========================
+   Адаптив: до 900 px
+   ========================= */
+
+@media (max-width: 900px) {
+    .game-detail-hero {
+        grid-template-columns: 1fr;
+    }
+
+    .game-detail-figure {
+        max-width: 620px;
+    }
+
+    .library-entry-hero {
+        grid-template-columns: 1fr;
+    }
+
+    .library-entry-cover {
+        max-width: 620px;
+    }
+}
+
+
+/* =========================
+   Адаптив: до 860 px
+   ========================= */
+
 @media (max-width: 860px) {
     .dashboard-columns {
         grid-template-columns: minmax(0, 1fr);
@@ -3349,7 +2932,498 @@ p {
     }
 }
 
+
+/* =========================
+   Адаптив: до 768 px
+   ========================= */
+
+@media (max-width: 768px) {
+    .container {
+        padding: 0 16px;
+    }
+
+    .site-main {
+        padding: 32px 0;
+    }
+
+    .site-nav {
+        gap: 16px;
+    }
+
+    .page-title {
+        font-size: 34px;
+    }
+
+    .section {
+        padding: 20px;
+    }
+
+    .games-list {
+        gap: 16px;
+    }
+
+    .library-edit-card {
+        padding: 18px;
+    }
+
+    /* Отзывы */
+    .review-form-card,
+    .review-delete-card {
+        padding: 22px;
+    }
+}
+
+
+/* =========================
+   Адаптив: до 520 px
+   ========================= */
+
 @media (max-width: 520px) {
+    .container {
+        padding: 0 12px;
+    }
+
+    .profile-card {
+        padding: 20px;
+    }
+
+    .profile-field {
+        grid-template-columns: 1fr;
+        gap: 6px;
+        padding: 16px 0;
+    }
+
+    .profile-actions,
+    .profile-edit-actions {
+        flex-direction: column;
+        align-items: stretch;
+        width: 100%;
+    }
+
+    .profile-actions .button,
+    .profile-edit-actions .button {
+        width: 100%;
+        text-align: center;
+    }
+
+    .section-title::before {
+        width: 8px;
+        height: 8px;
+    }
+
+    .project-figure {
+        margin: 0 auto 16px auto;
+    }
+
+    .site-header {
+        padding: 12px 0;
+    }
+
+    .button.back-to-top {
+        right: 12px;
+        bottom: 12px;
+        width: 44px;
+        height: 44px;
+        padding: 0;
+        font-size: 22px;
+    }
+
+    .site-main {
+        padding: 24px 0;
+    }
+
+    .site-nav {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .page-header {
+        margin-bottom: 24px;
+    }
+
+    .page-title {
+        font-size: 30px;
+    }
+
+    .page-title::after {
+        width: 40px;
+        height: 3px;
+        margin-top: 8px;
+    }
+
+    .page-subtitle {
+        font-size: 16px;
+    }
+
+    .section {
+        padding: 16px;
+    }
+
+    .game-form {
+        gap: 16px;
+        margin: 20px auto 0 auto;
+    }
+
+    .game-status-badge {
+        top: 10px;
+        right: 10px;
+        font-size: 13px;
+        padding: 5px 8px;
+    }
+
+    .game-status-badge::before {
+        width: 6px;
+        height: 6px;
+    }
+
+    .game-detail-actions {
+        grid-template-columns: 1fr;
+    }
+
+    .game-library-panel-header {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .game-library-panel-actions,
+    .game-library-form,
+    .game-library-form .button {
+        width: 100%;
+    }
+
+    .form-control {
+        padding: 10px 12px;
+    }
+
+    .form-actions {
+        display: block;
+    }
+
+    .form-actions .button {
+        display: block;
+        width: 100%;
+        text-align: center;
+    }
+
+    .form-fieldset {
+        padding: 14px;
+    }
+
+    .choice-list {
+        gap: 10px;
+    }
+
+    .choice-item {
+        align-items: flex-start;
+    }
+
+    .choice-input {
+        margin: 3px 0 0 0;
+    }
+
+    .empty-state {
+        min-height: 220px;
+        padding: 32px 16px;
+    }
+
+    .empty-state-actions {
+        width: 100%;
+    }
+
+    .empty-state-actions .button,
+    .empty-state-actions .search-reset {
+        width: 100%;
+        text-align: center;
+    }
+
+    .stats {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .stat-card {
+        flex: 1 1 auto;
+    }
+
+    .game-figure {
+        margin: 0 0 12px 0;
+    }
+
+    .games-list {
+        grid-template-columns: 1fr;
+    }
+
+    .game-card {
+        padding: 20px;
+    }
+
+    .game-info {
+        min-height: 0;
+    }
+
+    .featured-game {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 16px;
+    }
+
+    .featured-game-figure {
+        flex: 1 1 auto;
+    }
+
+    .featured-game-content {
+        flex: 1 1 auto;
+    }
+
+    .featured-game-title {
+        font-size: 22px;
+    }
+
+    .search-section {
+        margin-bottom: 24px;
+    }
+
+    .search-form {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 16px;
+    }
+
+    .search-field {
+        flex: 1 1 auto;
+        width: 100%;
+    }
+
+    .search-actions {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .search-actions .button,
+    .search-reset {
+        width: 100%;
+        text-align: center;
+    }
+
+    .search-results {
+        margin-top: 14px;
+    }
+
+    .search-status {
+        flex-basis: auto;
+        width: 100%;
+    }
+
+    .pagination {
+        gap: 6px;
+    }
+
+    .pagination-current {
+        width: 100%;
+        text-align: center;
+        order: -1;
+    }
+
+    .library-edit-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .library-edit-card {
+        padding: 14px;
+    }
+
+    .library-edit-card .game-form {
+        gap: 14px;
+    }
+
+    .library-edit-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .library-edit-actions .button {
+        width: 100%;
+    }
+
+    .library-entry-game-meta,
+    .library-entry-personal-grid,
+    .library-entry-timestamps {
+        grid-template-columns: 1fr;
+    }
+
+    .library-entry-personal-item--wide {
+        grid-column: auto;
+    }
+
+    .library-entry-title-row {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .library-entry-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .library-entry-actions .button {
+        width: 100%;
+        min-width: 0;
+        text-align: center;
+    }
+
+    .library-entry-actions__danger {
+        margin-left: 0;
+    }
+
+    .library-card-actions {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .library-delete-link {
+        grid-column: 1 / -1;
+    }
+
+    .delete-confirmation {
+        padding: 22px;
+        border-radius: 16px;
+    }
+
+    .delete-confirmation__header {
+        align-items: start;
+        gap: 12px;
+        padding-bottom: 18px;
+    }
+
+    .delete-confirmation__icon {
+        width: 46px;
+        height: 46px;
+        border-radius: 13px;
+        font-size: 24px;
+    }
+
+    .delete-confirmation__game {
+        margin-top: 18px;
+    }
+
+    .delete-data-list {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+
+    .delete-actions {
+        grid-template-columns: 1fr;
+    }
+
+    .library-delete-card {
+        padding: 20px;
+    }
+
+    .library-delete-actions {
+        flex-direction: column;
+    }
+
+    .library-delete-actions .button {
+        width: 100%;
+        min-width: 0;
+    }
+
+    /* Отзывы */
+    .reviews-header,
+    .reviews-action-panel,
+    .review-card__header {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .reviews-header {
+        gap: 14px;
+    }
+
+    .reviews-count {
+        align-self: flex-start;
+    }
+
+    .reviews-action-panel .button {
+        width: 100%;
+    }
+
+    .reviews-user-state {
+        flex: 0 1 auto;
+    }
+
+    .reviews-user-actions {
+        width: 100%;
+        margin-left: 0;
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .review-card {
+        padding: 16px;
+    }
+
+    .review-card__header {
+        gap: 12px;
+    }
+
+    .review-card__spoiler-label {
+        align-self: flex-start;
+    }
+
+    .review-form-card,
+    .review-delete-card {
+        padding: 18px;
+    }
+
+    .review-delete-title {
+        font-size: 20px;
+    }
+
+    .review-delete-actions {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .review-delete-actions .button {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .review-form-intro {
+        padding-bottom: 16px;
+    }
+
+    .review-form-card .review-form {
+        margin-top: 18px;
+    }
+
+    .review-form-actions {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .review-form-actions .button {
+        width: 100%;
+        min-width: 0;
+    }
+
+    /* Страница 404 */
+    .error-page {
+        margin: 24px auto;
+        padding: 24px;
+    }
+
+    .error-page__actions {
+        flex-direction: column;
+    }
+
+    .error-page__actions .button {
+        width: 100%;
+    }
+
+    /* Личный кабинет */
     .dashboard .section {
         padding: 18px;
     }
@@ -3374,5 +3448,25 @@ p {
     .dashboard-panel-footer .button,
     .dashboard-empty .button {
         width: 100%;
+    }
+}
+
+
+/* =========================
+   Уменьшение движения
+   ========================= */
+
+@media (prefers-reduced-motion: reduce) {
+    .button:hover,
+    .button:active,
+    .button.back-to-top:hover,
+    .button.back-to-top:active,
+    .game-card:hover {
+        transform: none;
+    }
+
+    .review-spoiler__summary,
+    .review-spoiler__summary::before {
+        transition: none;
     }
 }
