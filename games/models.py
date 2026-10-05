@@ -24,6 +24,11 @@ class Game(models.Model):
     cover = models.CharField(max_length=255, blank=True, default='')
     subtitle = models.CharField(max_length=255, blank=True, default='')
     playtime = models.CharField(max_length=100, blank=True, default='')
+    upload_cover = models.ImageField(
+        upload_to='games/',
+        blank=True,
+        null=True,
+    )
     features = models.ManyToManyField(
         Feature,
         related_name='games',
