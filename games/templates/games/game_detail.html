@@ -10,7 +10,13 @@
         <section class="section game-detail-hero">
             <figure class="game-detail-figure">
                 <div class="game-cover-wrapper">
-                    <img class="game-cover game-detail-cover" src="{% static game.cover %}" alt="Обложка игры {{ game.title }}">
+                    {% if game.upload_cover %}
+                        <img src="{{ game.upload_cover.url }}" alt="Обложка игры {{ game.title }}" class="game-cover game-detail-cover">
+                    {% elif game.cover %}
+                        <img class="game-cover game-detail-cover" src="{% static game.cover %}" alt="Обложка игры {{ game.title }}">
+                    {% else %}
+                        <span class="game-cover-placeholder">Обложка не добавлена</span>
+                    {% endif %}
                     {% if library_entry %}
                         <span class="game-status-badge game-status-badge--{{ library_entry.status }}">
                             {{ library_entry.get_status_display }}
@@ -128,7 +134,13 @@
                         <a href="{% url 'games:game_detail' game_slug=recommendation.slug %}" class="game-cover-link">
                             <figure class="game-figure">
                                 <div class="game-cover-wrapper">
-                                    <img class="game-cover" src="{% static recommendation.cover %}" alt="Обложка игры {{ recommendation.title }}">
+                                    {% if recommendation.upload_cover %}
+                                        <img src="{{ recommendation.upload_cover.url }}" alt="Обложка игры {{ recommendation.title }}" class="game-cover">
+                                    {% elif recommendation.cover %}
+                                        <img class="game-cover" src="{% static recommendation.cover %}" alt="Обложка игры {{ recommendation.title }}">
+                                    {% else %}
+                                        <span class="game-cover-placeholder">Обложка не добавлена</span>
+                                    {% endif %}
                                 </div>
                             </figure>
                         </a>

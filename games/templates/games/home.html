@@ -60,9 +60,13 @@
             <h2 class="section-title">Моя игра с наивысшей оценкой</h2>
             <article class="featured-game">
                 <figure class="featured-game-figure">
-                    <img class="featured-game-cover"
-                         src="{% static featured_game.game.cover %}"
-                         alt="Обложка игры {{ featured_game.game.title }}">
+                    {% if featured_game.game.upload_cover %}
+                        <img src="{{ featured_game.game.upload_cover.url }}" alt="Обложка игры {{ featured_game.game.title }}" class="featured-game-cover">
+                    {% elif featured_game.game.cover %}
+                        <img class="featured-game-cover" src="{% static featured_game.game.cover %}" alt="Обложка игры {{ featured_game.game.title }}">
+                    {% else %}
+                        <span class="game-cover-placeholder">Обложка не добавлена</span>
+                    {% endif %}
                 </figure>
                 <div class="featured-game-content">
                     <h3 class="featured-game-title">{{ featured_game.game.title }}</h3>

@@ -14,7 +14,13 @@
             <article class="game-card">
                 <figure class="game-figure">
                     <div class="game-cover-wrapper">
-                        <img class="game-cover" src="{% static game.cover %}" alt="Обложка игры {{ game.title }}">
+                        {% if game.upload_cover %}
+                            <img src="{{ game.upload_cover.url }}" alt="Обложка игры {{ game.title }}" class="game-cover">
+                        {% elif game.cover %}
+                            <img class="game-cover" src="{% static game.cover %}" alt="Обложка игры {{ game.title }}">
+                        {% else %}
+                            <span class="game-cover-placeholder">Обложка не добавлена</span>
+                        {% endif %}
                     </div>
                 </figure>
                 <h2 class="game-title">{{ game.title }}</h2>

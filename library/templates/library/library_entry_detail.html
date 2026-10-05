@@ -15,11 +15,13 @@
         <section class="section library-entry-hero">
             <figure class="library-entry-cover">
                 <div class="game-cover-wrapper">
-                    <img
-                        class="game-cover library-entry-cover__image"
-                        src="{% static entry.game.cover %}"
-                        alt="Обложка игры {{ entry.game.title }}"
-                    >
+                    {% if entry.game.upload_cover %}
+                        <img src="{{ entry.game.upload_cover.url }}" alt="Обложка игры {{ entry.game.title }}" class="game-cover library-entry-cover__image">
+                    {% elif entry.game.cover %}
+                        <img class="game-cover library-entry-cover__image" src="{% static entry.game.cover %}" alt="Обложка игры {{ entry.game.title }}">
+                    {% else %}
+                        <span class="game-cover-placeholder">Обложка не добавлена</span>
+                    {% endif %}
                     <span class="game-status-badge game-status-badge--{{ entry.status }}">
                         {{ entry.get_status_display }}
                     </span>
