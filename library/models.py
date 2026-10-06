@@ -95,6 +95,10 @@ class LibraryEntry(models.Model):
                 name='rating_only_in_dropped_or_completed_game'
             ),
         ]
+        indexes = [
+            models.Index(fields=['user', '-is_favourite', '-created_at', '-id'],
+                         name='lib_user_fav_created_id_idx'),
+        ]
 
     def __str__(self):
         return f'{self.user.get_username()} — {self.game.title}'
