@@ -1,5 +1,8 @@
+from functools import partial
+
 from django.contrib.auth.views import LoginView, PasswordChangeView, PasswordChangeDoneView, PasswordResetView, \
     PasswordResetDoneView, PasswordResetConfirmView, PasswordResetCompleteView
+from django.db import transaction
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import Http404, HttpResponseNotAllowed
 from django.urls import reverse, reverse_lazy
@@ -147,6 +150,21 @@ class GameUpdateView(PermissionRequiredMixin, UpdateView):
     template_name = 'games/game_form.html'
     slug_url_kwarg = 'game_slug'
     permission_required = 'games.change_game'
+
+    def form_valid(self, form):
+        with transaction.atomic():
+            old_upload_cover = Game.objects.values_list('upload_cover', flat=True).get(pk=self.object.pk)
+
+            response = super().form_valid(form)
+
+            new_upload_cover = self.object.upload_cover.name
+
+            if old_upload_cover and old_upload_cover != new_upload_cover:
+                storage = self.object.upload_cover.storage
+                callback = partial(storage.delete, old_upload_cover)
+                transaction.on_commit(callback)
+
+            return response
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
